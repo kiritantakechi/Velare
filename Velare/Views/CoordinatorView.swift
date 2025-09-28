@@ -10,6 +10,12 @@ import SwiftUI
 
 struct CoordinatorView: View {
     @Bindable var coordinator: AppCoordinator
+    @State private var viewModel: CoordinatorViewModel
+    
+    init(coordinator: AppCoordinator) {
+        self.coordinator = coordinator
+        self.viewModel = coordinator.makeCoordinatorViewModel()
+    }
 
     var body: some View {
         GlassEffectContainer {

@@ -34,7 +34,7 @@ final class PermissionService {
     }
 
     func requestScreenCapturePermission() -> Bool {
-        return CGRequestScreenCaptureAccess()
+        CGRequestScreenCaptureAccess()
     }
 
     func openSystemSettingsForScreenCapture() {

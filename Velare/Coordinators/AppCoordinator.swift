@@ -48,14 +48,22 @@ final class AppCoordinator {
     private(set) var currentStatus: AppStatus = .loading
     var selectedRoute: AppRoute?
 
+    let permissionService = PermissionService()
+    let windowDiscoveryService = WindowDiscoveryService()
+
     func start() async {
         await checkPermissions()
     }
 
     private func checkPermissions() async {
-        try? await Task.sleep(for: .seconds(1))
-        currentStatus = .permission
-        selectedRoute = .permission
+        permissionService.checkPermissions()
+
+        if permissionService.isScreenCapturePermissionGranted {
+            permissionsGranted()
+        }
+        else {
+            permissionsDenied()
+        }
     }
 
     func selectRoute(_ route: AppRoute) {
@@ -73,9 +81,15 @@ final class AppCoordinator {
         selectedRoute = .dashboard
     }
 
-    let permissionService = PermissionService()
-    let windowDiscoveryService = WindowDiscoveryService()
-    
+    func permissionsDenied() {
+        currentStatus = .permission
+        selectedRoute = .permission
+    }
+
+    func makeCoordinatorViewModel() -> CoordinatorViewModel {
+        CoordinatorViewModel()
+    }
+
     func makeDashboardViewModel() -> DashboardViewModel {
         DashboardViewModel()
     }
@@ -83,11 +97,11 @@ final class AppCoordinator {
     func makeCaptureViewModel() -> CaptureViewModel {
         CaptureViewModel(windowDiscoveryService: windowDiscoveryService)
     }
-    
+
     func makePermissionViewModel() -> PermissionViewModel {
         PermissionViewModel(permissionService: permissionService)
     }
-    
+
     func makeSettingViewModel() -> SettingViewModel {
         SettingViewModel()
     }
