@@ -15,8 +15,8 @@ final class PermissionViewModel {
         permissionService.screenCapturePermissionStatus
     }
 
-    var isPermissionGranted: Bool {
-        permissionService.isPermissionGranted
+    var isScreenCapturePermissionGranted: Bool {
+        permissionService.isScreenCapturePermissionGranted
     }
 
     init(permissionService: PermissionService) {
@@ -25,10 +25,11 @@ final class PermissionViewModel {
     }
 
     func checkPermissions() {
-        permissionService.checkScreenCapturePermission()
+        // 这里不请求，只检查
+        permissionService.checkPermissions()
     }
 
-    func requestPermission() {
+    func requestScreenCapturePermission() {
         _ = permissionService.requestScreenCapturePermission()
 
         checkPermissions()

@@ -17,16 +17,20 @@ enum PermissionStatus: Sendable {
 final class PermissionService {
     private(set) var screenCapturePermissionStatus: PermissionStatus = .unknown
 
-    var isPermissionGranted: Bool {
+    var isScreenCapturePermissionGranted: Bool {
         screenCapturePermissionStatus == .granted
     }
 
-    func checkScreenCapturePermission() {
+    func checkPermissions() {
+        // 这里不请求，只检查
+        
         if CGPreflightScreenCaptureAccess() {
             screenCapturePermissionStatus = .granted
         } else {
             screenCapturePermissionStatus = .denied
         }
+        
+        // 其他权限
     }
 
     func requestScreenCapturePermission() -> Bool {
