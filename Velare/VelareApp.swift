@@ -11,7 +11,7 @@ import SwiftUI
 struct VelareApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CoordinatorView()
         }
     }
 }

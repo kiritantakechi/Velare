@@ -1,0 +1,60 @@
+//
+//  CoordinatorView.swift
+//  Velare
+//
+//  Created by Kiritan on 2025/09/27.
+//
+
+import Combine
+import SwiftUI
+
+struct CoordinatorView: View {
+    @State private var coordinator = AppCoordinator()
+
+    var body: some View {
+        GlassEffectContainer {
+            NavigationSplitView {
+                List(AppRoute.allCases, selection: $coordinator.selectedRoute) { route in
+                    NavigationLink(value: route) {
+                        Label(route.localizedName, systemImage: route.iconName)
+                    }
+                }
+                .disabled(coordinator.currentState == .loading)
+                .navigationTitle("Velare")
+                .navigationSplitViewColumnWidth(min: 200, ideal: 250)
+            } detail: {
+                Group {
+                    if let route = coordinator.selectedRoute {
+                        switch route {
+                        case .dashboard:
+                            DashboardView(coordinator: coordinator)
+                        case .capture:
+                            CaptureView(coordinator: coordinator)
+                        case .setting:
+                            SettingView(coordinator: coordinator)
+                        case .permission:
+                            PermissionView(coordinator: coordinator)
+                        }
+                    } else {
+                        switch coordinator.currentState {
+                        case .loading:
+                            ProgressView("Loading…")
+                        default:
+                            Text("Select a section from the sidebar")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+                .navigationTitle(coordinator.selectedRoute?.localizedName ?? "Velare")
+            }
+            .frame(minWidth: 800, minHeight: 600)
+            .onAppear {
+                Task { await coordinator.start() }
+            }
+        }
+    }
+}
+
+#Preview {
+    CoordinatorView()
+}
