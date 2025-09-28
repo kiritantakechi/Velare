@@ -23,13 +23,13 @@ final class PermissionService {
 
     func checkPermissions() {
         // 这里不请求，只检查
-        
+
         if CGPreflightScreenCaptureAccess() {
             screenCapturePermissionStatus = .granted
         } else {
             screenCapturePermissionStatus = .denied
         }
-        
+
         // 其他权限
     }
 
@@ -39,7 +39,7 @@ final class PermissionService {
 
     func openSystemSettingsForScreenCapture() {
         if #available(macOS 13.0, *) {
-            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?id=com.apple.preference.security.Privacy_ScreenCapture")!)
+            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?Privacy_ScreenCapture")!)
         } else {
             NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture")!)
         }
