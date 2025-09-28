@@ -40,11 +40,14 @@ struct CaptureView: View {
                 }
                 ToolbarItem {
                     Button(action: { viewModel.refreshWindows() }) {
-                        if viewModel.isRefreshing {
-                            ProgressView()
-                        } else {
-                            Image(systemName: "arrow.clockwise")
-                        }
+                        Image(systemName: "arrow.clockwise")
+                            .opacity(viewModel.isRefreshing ? 0 : 1)
+                            .overlay {
+                                if viewModel.isRefreshing {
+                                    ProgressView()
+                                        .controlSize(.small)
+                                }
+                            }
                     }
                     .disabled(viewModel.isRefreshing)
                 }

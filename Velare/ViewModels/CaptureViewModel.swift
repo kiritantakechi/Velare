@@ -9,12 +9,18 @@ import SwiftUI
 
 @Observable
 final class CaptureViewModel {
-    private var windowDiscoveryService = WindowDiscoveryService()
+    private let windowDiscoveryService: WindowDiscoveryService
 
-    var availableWindows: [WindowInfo] = []
+    var availableWindows: [WindowInfo] {
+        windowDiscoveryService.availableWindows
+    }
+
     var selectedWindowID: CGWindowID? {
-        didSet {
-            if let windowID = selectedWindowID {
+        get {
+            windowDiscoveryService.selectedWindowID
+        }
+        set {
+            if let windowID = newValue {
                 windowDiscoveryService.selectWindow(by: windowID)
             } else {
                 windowDiscoveryService.clearSelection()
@@ -31,19 +37,20 @@ final class CaptureViewModel {
 
     func refreshWindows() {
         guard !isRefreshing else { return }
-        
+
         isRefreshing = true
-        
+
         Task {
-            await windowDiscoveryService.refreshAvailableContent()
+            async let refreshTask: () = await windowDiscoveryService.refreshAvailableContent()
+            async let sleepTask: () = (try? await Task.sleep(for: .seconds(0.1))) ?? ()
+
+            let _ = await (refreshTask, sleepTask)
+
+            isRefreshing = false
         }
-        
-        availableWindows = windowDiscoveryService.availableWindows
-        isRefreshing = false
     }
 
     func clearSelection() {
-        selectedWindowID = nil
         windowDiscoveryService.clearSelection()
     }
 }
