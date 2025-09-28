@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct VelareApp: App {
+    @State private var coordinator = AppCoordinator()
+    
     var body: some Scene {
         WindowGroup {
-            CoordinatorView()
+            CoordinatorView(coordinator: coordinator)
         }
     }
 }

@@ -30,8 +30,8 @@ final class CaptureViewModel {
 
     var isRefreshing = false
 
-    init(service: WindowDiscoveryService) {
-        self.windowDiscoveryService = service
+    init(windowDiscoveryService: WindowDiscoveryService) {
+        self.windowDiscoveryService = windowDiscoveryService
         refreshWindows()
     }
 
@@ -44,7 +44,7 @@ final class CaptureViewModel {
             async let refreshTask: () = await windowDiscoveryService.refreshAvailableContent()
             async let sleepTask: () = (try? await Task.sleep(for: .seconds(0.1))) ?? ()
 
-            let _ = await (refreshTask, sleepTask)
+            _ = await (refreshTask, sleepTask)
 
             isRefreshing = false
         }

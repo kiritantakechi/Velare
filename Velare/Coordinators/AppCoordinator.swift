@@ -34,7 +34,7 @@ enum AppRoute: CaseIterable, Hashable, Identifiable, Sendable {
     }
 }
 
-enum AppState: Sendable {
+enum AppStatus: Sendable {
     case loading
     case dashboard
     case capture
@@ -45,7 +45,7 @@ enum AppState: Sendable {
 @MainActor
 @Observable
 final class AppCoordinator {
-    private(set) var currentState: AppState = .loading
+    private(set) var currentStatus: AppStatus = .loading
     var selectedRoute: AppRoute?
 
     func start() async {
@@ -54,25 +54,26 @@ final class AppCoordinator {
 
     private func checkPermissions() async {
         try? await Task.sleep(for: .seconds(1))
-        currentState = .permission
+        currentStatus = .permission
         selectedRoute = .permission
     }
 
     func selectRoute(_ route: AppRoute) {
         selectedRoute = route
         switch route {
-        case .dashboard: currentState = .dashboard
-        case .capture: currentState = .capture
-        case .setting: currentState = .setting
-        case .permission: currentState = .permission
+        case .dashboard: currentStatus = .dashboard
+        case .capture: currentStatus = .capture
+        case .setting: currentStatus = .setting
+        case .permission: currentStatus = .permission
         }
     }
 
     func permissionsGranted() {
-        currentState = .dashboard
+        currentStatus = .dashboard
         selectedRoute = .dashboard
     }
 
+    let permissionService = PermissionService()
     let windowDiscoveryService = WindowDiscoveryService()
     
     func makeDashboardViewModel() -> DashboardViewModel {
@@ -80,11 +81,11 @@ final class AppCoordinator {
     }
 
     func makeCaptureViewModel() -> CaptureViewModel {
-        CaptureViewModel(service: windowDiscoveryService)
+        CaptureViewModel(windowDiscoveryService: windowDiscoveryService)
     }
     
     func makePermissionViewModel() -> PermissionViewModel {
-        PermissionViewModel()
+        PermissionViewModel(permissionService: permissionService)
     }
     
     func makeSettingViewModel() -> SettingViewModel {

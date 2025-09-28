@@ -9,7 +9,7 @@ import Combine
 import SwiftUI
 
 struct CoordinatorView: View {
-    @State private var coordinator = AppCoordinator()
+    @Bindable var coordinator: AppCoordinator
 
     var body: some View {
         GlassEffectContainer {
@@ -19,7 +19,7 @@ struct CoordinatorView: View {
                         Label(route.localizedName, systemImage: route.iconName)
                     }
                 }
-                .disabled(coordinator.currentState == .loading)
+                .disabled(coordinator.currentStatus == .loading)
                 .navigationTitle("Velare")
                 .navigationSplitViewColumnWidth(min: 200, ideal: 250)
             } detail: {
@@ -36,7 +36,7 @@ struct CoordinatorView: View {
                             PermissionView(coordinator: coordinator)
                         }
                     } else {
-                        switch coordinator.currentState {
+                        switch coordinator.currentStatus {
                         case .loading:
                             ProgressView("Loading…")
                         default:
@@ -53,8 +53,4 @@ struct CoordinatorView: View {
             }
         }
     }
-}
-
-#Preview {
-    CoordinatorView()
 }

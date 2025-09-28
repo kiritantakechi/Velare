@@ -9,7 +9,12 @@ import SwiftUI
 
 struct SettingView: View {
     @Bindable var coordinator: AppCoordinator
-    @State private var viewModel = SettingViewModel()
+    @State private var viewModel: SettingViewModel
+
+    init(coordinator: AppCoordinator) {
+        self.coordinator = coordinator
+        self.viewModel = coordinator.makeSettingViewModel()
+    }
 
     var body: some View {
         GlassEffectContainer {

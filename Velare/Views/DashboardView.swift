@@ -9,7 +9,12 @@ import SwiftUI
 
 struct DashboardView: View {
     @Bindable var coordinator: AppCoordinator
-    @State private var viewModel = DashboardViewModel()
+    @State private var viewModel: DashboardViewModel
+
+    init(coordinator: AppCoordinator) {
+        self.coordinator = coordinator
+        self.viewModel = coordinator.makeDashboardViewModel()
+    }
 
     var body: some View {
         GlassEffectContainer {
