@@ -8,12 +8,10 @@
 import SwiftUI
 
 struct DashboardView: View {
-    @Bindable var coordinator: AppCoordinator
     @State private var viewModel: DashboardViewModel
-
-    init(coordinator: AppCoordinator) {
-        self.coordinator = coordinator
-        self.viewModel = coordinator.makeDashboardViewModel()
+    
+    init(viewModel: DashboardViewModel) {
+        self.viewModel = viewModel
     }
 
     var body: some View {

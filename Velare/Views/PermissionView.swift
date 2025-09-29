@@ -8,12 +8,10 @@
 import SwiftUI
 
 struct PermissionView: View {
-    @Bindable var coordinator: AppCoordinator
     @State private var viewModel: PermissionViewModel
 
-    init(coordinator: AppCoordinator) {
-        self.coordinator = coordinator
-        self.viewModel = coordinator.makePermissionViewModel()
+    init(viewModel: PermissionViewModel) {
+        self.viewModel = viewModel
     }
 
     var body: some View {
@@ -65,7 +63,7 @@ struct PermissionView: View {
         if viewModel.isScreenCapturePermissionGranted {
             // --- 状态：已授权 ---
             Button(action: {
-                coordinator.permissionsGranted()
+                viewModel.permissionsGranted()
             }) {
                 Label("权限已授予", systemImage: "checkmark.circle.fill")
             }

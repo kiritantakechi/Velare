@@ -9,33 +9,39 @@ import SwiftUI
 
 @Observable
 final class PermissionViewModel {
+    private let coordinator: AppCoordinator
     private let permissionService: PermissionService
-
-    var screenCapturePermissionStatus: PermissionStatus {
-        permissionService.screenCapturePermissionStatus
-    }
-
-    var isScreenCapturePermissionGranted: Bool {
-        permissionService.isScreenCapturePermissionGranted
-    }
-
-    init(permissionService: PermissionService) {
-        self.permissionService = permissionService
+    
+    var screenCapturePermissionStatus: PermissionStatus { permissionService.screenCapturePermissionStatus }
+    
+    var isScreenCapturePermissionGranted: Bool { permissionService.isScreenCapturePermissionGranted }
+    
+    init(coordinator: AppCoordinator) {
+        self.coordinator = coordinator
+        self.permissionService = coordinator.permissionService
         checkPermissions()
     }
-
+    
     func checkPermissions() {
         // 这里不请求，只检查
         permissionService.checkPermissions()
     }
-
+    
     func requestScreenCapturePermission() {
         _ = permissionService.requestScreenCapturePermission()
-
+        
         checkPermissions()
     }
-
+    
     func openSystemSettingsForScreenCapture() {
         permissionService.openSystemSettingsForScreenCapture()
+    }
+    
+    func permissionsGranted() {
+        coordinator.permissionsGranted()
+    }
+    
+    func permissionsDenied() {
+        coordinator.permissionsDenied()
     }
 }

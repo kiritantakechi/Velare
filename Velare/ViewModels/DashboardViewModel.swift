@@ -9,5 +9,9 @@ import SwiftUI
 
 @Observable
 final class DashboardViewModel {
+    private let coordinator: AppCoordinator
     
+    init(coordinator: AppCoordinator) {
+        self.coordinator = coordinator
+    }
 }

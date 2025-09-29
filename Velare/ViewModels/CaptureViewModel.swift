@@ -9,11 +9,10 @@ import SwiftUI
 
 @Observable
 final class CaptureViewModel {
+    private let coordinator: AppCoordinator
     private let windowDiscoveryService: WindowDiscoveryService
 
-    var availableWindows: [WindowInfo] {
-        windowDiscoveryService.availableWindows
-    }
+    var availableWindows: [WindowInfo] { windowDiscoveryService.availableWindows }
 
     var selectedWindowID: CGWindowID? {
         get {
@@ -30,8 +29,9 @@ final class CaptureViewModel {
 
     var isRefreshing = false
 
-    init(windowDiscoveryService: WindowDiscoveryService) {
-        self.windowDiscoveryService = windowDiscoveryService
+    init(coordinator: AppCoordinator) {
+        self.coordinator = coordinator
+        self.windowDiscoveryService = coordinator.windowDiscoveryService
         refreshWindows()
     }
 

@@ -8,12 +8,10 @@
 import SwiftUI
 
 struct CaptureView: View {
-    @Bindable var coordinator: AppCoordinator
     @State private var viewModel: CaptureViewModel
 
-    init(coordinator: AppCoordinator) {
-        self.coordinator = coordinator
-        self.viewModel = coordinator.makeCaptureViewModel()
+    init(viewModel: CaptureViewModel) {
+        self.viewModel = viewModel
     }
 
     var body: some View {

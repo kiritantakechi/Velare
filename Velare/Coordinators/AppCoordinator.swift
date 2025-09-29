@@ -50,6 +50,8 @@ final class AppCoordinator {
 
     let permissionService = PermissionService()
     let windowDiscoveryService = WindowDiscoveryService()
+    
+    var isLoading: Bool { currentStatus == .loading }
 
     func start() async {
         await checkPermissions()
@@ -84,25 +86,5 @@ final class AppCoordinator {
     func permissionsDenied() {
         currentStatus = .permission
         selectedRoute = .permission
-    }
-
-    func makeCoordinatorViewModel() -> CoordinatorViewModel {
-        CoordinatorViewModel()
-    }
-
-    func makeDashboardViewModel() -> DashboardViewModel {
-        DashboardViewModel()
-    }
-
-    func makeCaptureViewModel() -> CaptureViewModel {
-        CaptureViewModel(windowDiscoveryService: windowDiscoveryService)
-    }
-
-    func makePermissionViewModel() -> PermissionViewModel {
-        PermissionViewModel(permissionService: permissionService)
-    }
-
-    func makeSettingViewModel() -> SettingViewModel {
-        SettingViewModel()
     }
 }

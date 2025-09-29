@@ -9,5 +9,9 @@ import SwiftUI
 
 @Observable
 final class SettingViewModel {
+    private let coordinator: AppCoordinator
     
+    init(coordinator: AppCoordinator) {
+        self.coordinator = coordinator
+    }
 }

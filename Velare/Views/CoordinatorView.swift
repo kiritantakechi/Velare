@@ -9,40 +9,38 @@ import Combine
 import SwiftUI
 
 struct CoordinatorView: View {
-    @Bindable var coordinator: AppCoordinator
     @State private var viewModel: CoordinatorViewModel
     
-    init(coordinator: AppCoordinator) {
-        self.coordinator = coordinator
-        self.viewModel = coordinator.makeCoordinatorViewModel()
+    init(viewModel: CoordinatorViewModel) {
+        self.viewModel = viewModel
     }
 
     var body: some View {
         GlassEffectContainer {
             NavigationSplitView {
-                List(AppRoute.allCases, selection: $coordinator.selectedRoute) { route in
+                List(AppRoute.allCases, selection: $viewModel.selectedRoute) { route in
                     NavigationLink(value: route) {
                         Label(route.localizedName, systemImage: route.iconName)
                     }
                 }
-                .disabled(coordinator.currentStatus == .loading)
+                .disabled(viewModel.isLoading)
                 .navigationTitle("Velare")
                 .navigationSplitViewColumnWidth(min: 180, ideal: 200)
             } detail: {
                 Group {
-                    if let route = coordinator.selectedRoute {
+                    if let route = viewModel.selectedRoute {
                         switch route {
                         case .dashboard:
-                            DashboardView(coordinator: coordinator)
+                            DashboardView(viewModel: viewModel.makeDashboardViewModel())
                         case .capture:
-                            CaptureView(coordinator: coordinator)
+                            CaptureView(viewModel: viewModel.makeCaptureViewModel())
                         case .setting:
-                            SettingView(coordinator: coordinator)
+                            SettingView(viewModel: viewModel.makeSettingViewModel())
                         case .permission:
-                            PermissionView(coordinator: coordinator)
+                            PermissionView(viewModel: viewModel.makePermissionViewModel())
                         }
                     } else {
-                        switch coordinator.currentStatus {
+                        switch viewModel.currentStatus {
                         case .loading:
                             ProgressView("Loading…")
                         default:
@@ -51,11 +49,11 @@ struct CoordinatorView: View {
                         }
                     }
                 }
-                .navigationTitle(coordinator.selectedRoute?.localizedName ?? "Velare")
+                .navigationTitle(viewModel.selectedRoute?.localizedName ?? "Velare")
             }
             .frame(minWidth: 600, minHeight: 600)
             .onAppear {
-                Task { await coordinator.start() }
+                viewModel.start()
             }
         }
     }
