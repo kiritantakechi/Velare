@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-enum AppRoute: CaseIterable, Hashable, Identifiable, Sendable {
-    var id: Self { self }
-
+enum AppRoute: String, CaseIterable, Hashable, Identifiable, Sendable {
     case dashboard
     case capture
     case setting
     case permission
+
+    var id: String { rawValue }
 
     var localizedName: String {
         switch self {
@@ -40,15 +40,16 @@ final class AppCoordinator {
     var selectedRoute: AppRoute?
 
     let permissionService = PermissionService()
+    let settingService = SettingService()
     let systemMonitorService = SystemMonitorService()
     let windowDiscoveryService = WindowDiscoveryService()
-    
+
     private(set) var isLoading = true
 
     func start() async {
         await checkPermissions()
         updateSystemMonitor()
-        
+
         isLoading = false
     }
 
@@ -62,7 +63,7 @@ final class AppCoordinator {
             permissionsDenied()
         }
     }
-    
+
     private func updateSystemMonitor() {
         systemMonitorService.updateMonitoring()
     }

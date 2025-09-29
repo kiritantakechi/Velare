@@ -85,7 +85,6 @@ struct MetricCard<Content: View>: View {
                     .foregroundColor(.secondary)
                     .monospacedDigit()
             }
-
             content
         }
         .padding()

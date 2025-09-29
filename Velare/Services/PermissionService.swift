@@ -7,10 +7,12 @@
 
 import SwiftUI
 
-enum PermissionStatus: Sendable {
+enum PermissionStatus: String, Hashable, Sendable {
     case unknown
     case denied
     case granted
+
+    var id: String { rawValue }
 }
 
 @Observable

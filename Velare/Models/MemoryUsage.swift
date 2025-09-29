@@ -5,7 +5,7 @@
 //  Created by Kiritan on 2025/09/29.
 //
 
-struct MemoryUsage: Sendable {
+struct MemoryUsage: Hashable, Sendable {
     let used: Double
     let total: Double
     var free: Double { total - used }
