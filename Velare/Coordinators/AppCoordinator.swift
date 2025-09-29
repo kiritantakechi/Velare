@@ -40,12 +40,14 @@ final class AppCoordinator {
     var selectedRoute: AppRoute?
 
     let permissionService = PermissionService()
+    let systemMonitorService = SystemMonitorService()
     let windowDiscoveryService = WindowDiscoveryService()
     
     private(set) var isLoading = true
 
     func start() async {
         await checkPermissions()
+        updateSystemMonitor()
         
         isLoading = false
     }
@@ -59,6 +61,10 @@ final class AppCoordinator {
         else {
             permissionsDenied()
         }
+    }
+    
+    private func updateSystemMonitor() {
+        systemMonitorService.updateMonitoring()
     }
 
     func selectRoute(_ route: AppRoute) {

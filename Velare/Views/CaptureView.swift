@@ -30,6 +30,7 @@ struct CaptureView: View {
                     .padding(.vertical, 4)
                 }
                 .listStyle(.bordered(alternatesRowBackgrounds: true))
+                .scrollIndicators(.hidden)
             }
             .padding()
             .toolbar {

@@ -23,6 +23,7 @@ struct CoordinatorView: View {
                         Label(route.localizedName, systemImage: route.iconName)
                     }
                 }
+                .scrollIndicators(.hidden)
                 .disabled(viewModel.isLoading)
                 .navigationTitle("Velare")
                 .navigationSplitViewColumnWidth(min: 160, ideal: 200)

@@ -35,14 +35,14 @@ final class CaptureViewModel {
         refreshWindows()
     }
 
-    func refreshWindows() {
+    func refreshWindows(interval: TimeInterval = 0.1) {
         guard !isRefreshing else { return }
 
         isRefreshing = true
 
         Task {
             async let refreshTask: () = await windowDiscoveryService.refreshAvailableContent()
-            async let sleepTask: () = (try? await Task.sleep(for: .seconds(0.1))) ?? ()
+            async let sleepTask: () = (try? await Task.sleep(for: .seconds(interval))) ?? ()
 
             _ = await (refreshTask, sleepTask)
 
