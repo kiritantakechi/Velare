@@ -10,7 +10,7 @@ import SwiftUI
 
 struct CoordinatorView: View {
     @State private var viewModel: CoordinatorViewModel
-    
+
     init(viewModel: CoordinatorViewModel) {
         self.viewModel = viewModel
     }
@@ -25,7 +25,7 @@ struct CoordinatorView: View {
                 }
                 .disabled(viewModel.isLoading)
                 .navigationTitle("Velare")
-                .navigationSplitViewColumnWidth(min: 180, ideal: 200)
+                .navigationSplitViewColumnWidth(min: 160, ideal: 200)
             } detail: {
                 Group {
                     if let route = viewModel.selectedRoute {
@@ -40,10 +40,9 @@ struct CoordinatorView: View {
                             PermissionView(viewModel: viewModel.makePermissionViewModel())
                         }
                     } else {
-                        switch viewModel.currentStatus {
-                        case .loading:
+                        if viewModel.isLoading {
                             ProgressView("Loading…")
-                        default:
+                        } else {
                             Text("Select a section from the sidebar")
                                 .foregroundStyle(.secondary)
                         }
@@ -51,7 +50,7 @@ struct CoordinatorView: View {
                 }
                 .navigationTitle(viewModel.selectedRoute?.localizedName ?? "Velare")
             }
-            .frame(minWidth: 600, minHeight: 600)
+            .frame(minWidth: 600, minHeight: 480)
             .onAppear {
                 viewModel.start()
             }

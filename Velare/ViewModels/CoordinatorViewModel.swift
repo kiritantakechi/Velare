@@ -10,8 +10,6 @@ import SwiftUI
 @Observable
 final class CoordinatorViewModel {
     private let coordinator: AppCoordinator
-    
-    var currentStatus: AppStatus { coordinator.currentStatus }
 
     var selectedRoute: AppRoute? { get { coordinator.selectedRoute } set { coordinator.selectedRoute = newValue }}
     

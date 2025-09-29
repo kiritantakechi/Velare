@@ -33,10 +33,7 @@ struct CaptureView: View {
             }
             .padding()
             .toolbar {
-                ToolbarItem {
-                    Spacer()
-                }
-                ToolbarItem {
+                ToolbarItemGroup(placement: .primaryAction) {
                     Button(action: { viewModel.refreshWindows() }) {
                         Image(systemName: "arrow.clockwise")
                             .opacity(viewModel.isRefreshing ? 0 : 1)

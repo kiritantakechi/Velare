@@ -34,27 +34,20 @@ enum AppRoute: CaseIterable, Hashable, Identifiable, Sendable {
     }
 }
 
-enum AppStatus: Sendable {
-    case loading
-    case dashboard
-    case capture
-    case setting
-    case permission
-}
-
 @MainActor
 @Observable
 final class AppCoordinator {
-    private(set) var currentStatus: AppStatus = .loading
     var selectedRoute: AppRoute?
 
     let permissionService = PermissionService()
     let windowDiscoveryService = WindowDiscoveryService()
     
-    var isLoading: Bool { currentStatus == .loading }
+    private(set) var isLoading = true
 
     func start() async {
         await checkPermissions()
+        
+        isLoading = false
     }
 
     private func checkPermissions() async {
@@ -70,21 +63,13 @@ final class AppCoordinator {
 
     func selectRoute(_ route: AppRoute) {
         selectedRoute = route
-        switch route {
-        case .dashboard: currentStatus = .dashboard
-        case .capture: currentStatus = .capture
-        case .setting: currentStatus = .setting
-        case .permission: currentStatus = .permission
-        }
     }
 
     func permissionsGranted() {
-        currentStatus = .dashboard
         selectedRoute = .dashboard
     }
 
     func permissionsDenied() {
-        currentStatus = .permission
         selectedRoute = .permission
     }
 }
