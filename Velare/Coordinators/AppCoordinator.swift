@@ -15,12 +15,12 @@ enum AppRoute: String, CaseIterable, Hashable, Identifiable, Sendable {
 
     var id: String { rawValue }
 
-    var localizedName: String {
+    var localizationKey: String {
         switch self {
-        case .dashboard: return "Dashboard"
-        case .capture: return "Capture"
-        case .setting: return "Settings"
-        case .permission: return "Permissions"
+        case .dashboard: return "coordinator.route.dashboard"
+        case .capture: return "coordinator.route.capture"
+        case .setting: return "coordinator.route.setting"
+        case .permission: return "coordinator.route.permission"
         }
     }
 

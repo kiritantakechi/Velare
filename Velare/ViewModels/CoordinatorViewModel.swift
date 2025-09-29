@@ -10,13 +10,17 @@ import SwiftUI
 @Observable
 final class CoordinatorViewModel {
     private let coordinator: AppCoordinator
+    private let settingService: SettingService
 
     var selectedRoute: AppRoute? { get { coordinator.selectedRoute } set { coordinator.selectedRoute = newValue }}
     
     var isLoading: Bool { coordinator.isLoading }
     
+    var activeLocale: Locale { settingService.activeLocale }
+    
     init(coordinator: AppCoordinator) {
         self.coordinator = coordinator
+        self.settingService = coordinator.settingService
     }
     
     func start() {

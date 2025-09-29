@@ -10,19 +10,27 @@ import SwiftUI
 enum AppLanguage: String, CaseIterable, Hashable, Identifiable, Sendable {
     case systemDefault = "system"
     case english = "en"
-    case japanese = "ja"
     case simplifiedChinese = "zh-Hans"
     case traditionalChinese = "zh-Hant"
+    case french = "fr"
+    case german = "de"
+    case italian = "it"
+    case japanese = "ja"
+    case korean = "ko"
 
     var id: String { rawValue }
 
-    var localizedName: String {
+    var localizationKey: String {
         switch self {
-        case .systemDefault: return "跟随系统 (System)"
-        case .english: return "English"
-        case .japanese: return "日本語"
-        case .simplifiedChinese: return "简体中文"
-        case .traditionalChinese: return "繁體中文"
+        case .systemDefault: return "setting.language.system"
+        case .english: return "setting.language.english"
+        case .simplifiedChinese: return "setting.language.simplifiedChinese"
+        case .traditionalChinese: return "setting.language.traditionalChinese"
+        case .french: return "setting.language.french"
+        case .german: return "setting.language.german"
+        case .italian: return "setting.language.italian"
+        case .japanese: return "setting.language.japanese"
+        case .korean: return "setting.language.korean"
         }
     }
 }
@@ -34,11 +42,11 @@ enum MetalFXMode: String, CaseIterable, Hashable, Identifiable, Sendable {
 
     var id: String { rawValue }
 
-    var localizedName: String {
+    var localizationKey: String {
         switch self {
-        case .performance: return "性能优先 (Performance)"
-        case .balanced: return "平衡 (Balanced)"
-        case .quality: return "质量优先 (Quality)"
+        case .performance: return "setting.metalfx.mode.performance"
+        case .balanced: return "setting.metalfx.mode.balanced"
+        case .quality: return "setting.metalfx.mode.quality"
         }
     }
 }
@@ -56,6 +64,15 @@ final class SettingService {
             UserDefaults.standard.setValue(appLanguage.rawValue, forKey: Keys.appLanguage)
             // 你可以在这里发布一个通知，让App的其他部分响应语言变化
         }
+    }
+
+    var activeLocale: Locale {
+        // 如果设置为“跟随系统”，则返回系统当前的 locale
+        guard appLanguage != .systemDefault else {
+            return Locale.autoupdatingCurrent
+        }
+        // 否则，根据我们枚举的 rawValue 创建一个指定的 locale
+        return Locale(identifier: appLanguage.rawValue)
     }
 
     var isMetalFXEnabled: Bool {

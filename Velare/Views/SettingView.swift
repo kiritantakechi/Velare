@@ -18,28 +18,34 @@ struct SettingView: View {
         GlassEffectContainer {
             // Form 会自动提供平台原生的列表样式
             Form {
-                Section(header: Text("通用 (General)")) {
-                    Picker("语言 (Language)", selection: $viewModel.appLanguage) {
+                Section(header: Text("setting.view.section.general")) {
+                    Picker("setting.view.languagePicker.label", selection: $viewModel.appLanguage) {
                         ForEach(AppLanguage.allCases) { language in
-                            Text(language.localizedName).tag(language)
+                            Text(
+                                LocalizedStringKey(language.localizationKey)
+                            )
+                            .tag(language)
                         }
                     }
                     .pickerStyle(.menu)
                     .frame(maxWidth: 300) // 限制选择器的宽度
                 }
-                Section(header: Text("视频增强 (Video Enhancement)")) {
+                Section(header: Text("setting.view.section.videoEnhancement")) {
                     // MetalFX 开关
                     Toggle(isOn: $viewModel.isMetalFXEnabled) {
-                        Text("启用 MetalFX 缩放")
-                        Text("使用 Apple Silicon 的性能提升视频分辨率，可能会增加功耗。")
+                        Text("setting.view.metalfx.enable.label")
+                        Text("setting.view.metalfx.enable.description")
                             .font(.footnote)
                             .foregroundColor(.secondary)
                     }
 
                     // MetalFX 模式选择
-                    Picker("模式 (Mode)", selection: $viewModel.metalFXMode) {
+                    Picker("setting.view.metalfx.modePicker.label", selection: $viewModel.metalFXMode) {
                         ForEach(MetalFXMode.allCases) { mode in
-                            Text(mode.localizedName).tag(mode)
+                            Text(
+                                LocalizedStringKey(mode.localizationKey)
+                            )
+                            .tag(mode)
                         }
                     }
                     .pickerStyle(.menu)

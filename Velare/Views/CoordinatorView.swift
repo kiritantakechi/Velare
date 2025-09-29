@@ -20,12 +20,15 @@ struct CoordinatorView: View {
             NavigationSplitView {
                 List(AppRoute.allCases, selection: $viewModel.selectedRoute) { route in
                     NavigationLink(value: route) {
-                        Label(route.localizedName, systemImage: route.iconName)
+                        Label(
+                            LocalizedStringKey(route.localizationKey),
+                            systemImage: route.iconName
+                        )
                     }
                 }
                 .scrollIndicators(.hidden)
                 .disabled(viewModel.isLoading)
-                .navigationTitle("Velare")
+                .navigationTitle("coordinator.view.navigation.title")
                 .navigationSplitViewColumnWidth(min: 160, ideal: 200)
             } detail: {
                 Group {
@@ -42,19 +45,23 @@ struct CoordinatorView: View {
                         }
                     } else {
                         if viewModel.isLoading {
-                            ProgressView("Loading…")
+                            ProgressView("coordinator.view.detail.loading")
                         } else {
-                            Text("Select a section from the sidebar")
+                            Text("coordinator.view.detail.selectionPrompt")
                                 .foregroundStyle(.secondary)
                         }
                     }
                 }
-                .navigationTitle(viewModel.selectedRoute?.localizedName ?? "Velare")
+//                // 无法解决的 Bug
+//                .navigationTitle(
+//                    LocalizedStringKey(viewModel.selectedRoute?.localizationKey ?? "coordinator.view.navigation.title")
+//                )
             }
             .frame(minWidth: 600, minHeight: 480)
             .onAppear {
                 viewModel.start()
             }
+            .environment(\.locale, viewModel.activeLocale)
         }
     }
 }

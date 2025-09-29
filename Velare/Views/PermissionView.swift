@@ -26,11 +26,11 @@ struct PermissionView: View {
                     .foregroundColor(.accentColor)
                     .padding(.bottom, 10)
 
-                Text("屏幕录制权限")
+                Text("permission.view.title")
                     .font(.largeTitle)
                     .fontWeight(.bold)
 
-                Text("为了能够捕捉您的屏幕内容，Velare 需要屏幕录制权限。您的隐私将受到保护。")
+                Text("permission.view.description")
                     .font(.body)
                     .multilineTextAlignment(.center)
                     .foregroundColor(.secondary)
@@ -49,6 +49,8 @@ struct PermissionView: View {
                         .padding(.horizontal)
                         .padding(.bottom, 20)
                 }
+                
+                Spacer()
             }
             .padding()
             // 当应用从后台回到前台时（例如从系统设置回来），重新检查权限
@@ -65,7 +67,7 @@ struct PermissionView: View {
             Button(action: {
                 viewModel.permissionsGranted()
             }) {
-                Label("权限已授予", systemImage: "checkmark.circle.fill")
+                Label("permission.view.button.granted", systemImage: "checkmark.circle.fill")
             }
             .controlSize(.large)
             .buttonStyle(.borderedProminent)
@@ -76,7 +78,7 @@ struct PermissionView: View {
                 // 点击后会触发系统弹窗
                 viewModel.requestScreenCapturePermission()
             }) {
-                Label("授予权限", systemImage: "lock.shield.fill")
+                Label("permission.view.button.grant", systemImage: "lock.shield.fill")
             }
             .controlSize(.large)
             .buttonStyle(.borderedProminent)
@@ -85,7 +87,7 @@ struct PermissionView: View {
 
     @ViewBuilder
     private var secondaryActionButton: some View {
-        Button("打开系统设置") {
+        Button("permission.view.button.openSetting") {
             viewModel.openSystemSettingsForScreenCapture()
         }
         .buttonStyle(.link)

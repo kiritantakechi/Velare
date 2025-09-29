@@ -34,7 +34,7 @@ struct DashboardView: View {
 
     private var cpuCard: some View {
         MetricCard(
-            title: "CPU Usage",
+            title: LocalizedStringKey("dashboard.view.cpuCard.title"),
             iconName: "cpu",
             iconColor: .blue,
             valueText: viewModel.cpuUsagePercentage
@@ -47,7 +47,7 @@ struct DashboardView: View {
 
     private var memoryCard: some View {
         MetricCard(
-            title: "Memory Usage",
+            title: LocalizedStringKey("dashboard.view.memoryCard.title"),
             iconName: "memorychip",
             iconColor: .green,
             valueText: viewModel.memoryUsageDescription
@@ -60,7 +60,7 @@ struct DashboardView: View {
 }
 
 struct MetricCard<Content: View>: View {
-    let title: String
+    let title: LocalizedStringKey
     let iconName: String
     let iconColor: Color
     let valueText: String
