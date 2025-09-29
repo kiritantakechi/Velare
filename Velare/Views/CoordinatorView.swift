@@ -27,7 +27,7 @@ struct CoordinatorView: View {
                 }
                 .disabled(coordinator.currentStatus == .loading)
                 .navigationTitle("Velare")
-                .navigationSplitViewColumnWidth(min: 200, ideal: 250)
+                .navigationSplitViewColumnWidth(min: 180, ideal: 200)
             } detail: {
                 Group {
                     if let route = coordinator.selectedRoute {
@@ -53,7 +53,7 @@ struct CoordinatorView: View {
                 }
                 .navigationTitle(coordinator.selectedRoute?.localizedName ?? "Velare")
             }
-            .frame(minWidth: 800, minHeight: 600)
+            .frame(minWidth: 600, minHeight: 600)
             .onAppear {
                 Task { await coordinator.start() }
             }
