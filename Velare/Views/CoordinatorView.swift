@@ -52,7 +52,7 @@ struct CoordinatorView: View {
                         }
                     }
                 }
-//                // 无法解决的 Bug
+//                // 无法解决的国际化 Bug
 //                .navigationTitle(
 //                    LocalizedStringKey(viewModel.selectedRoute?.localizationKey ?? "coordinator.view.navigation.title")
 //                )

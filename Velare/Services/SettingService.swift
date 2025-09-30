@@ -9,28 +9,28 @@ import SwiftUI
 
 enum AppLanguage: String, CaseIterable, Hashable, Identifiable, Sendable {
     case systemDefault = "system"
-    case english = "en"
-    case simplifiedChinese = "zh-Hans"
-    case traditionalChinese = "zh-Hant"
-    case french = "fr"
     case german = "de"
+    case english = "en"
+    case french = "fr"
     case italian = "it"
     case japanese = "ja"
     case korean = "ko"
+    case simplifiedChinese = "zh-Hans"
+    case traditionalChinese = "zh-Hant"
 
     var id: String { rawValue }
 
     var localizationKey: String {
         switch self {
         case .systemDefault: return "setting.language.system"
-        case .english: return "setting.language.english"
-        case .simplifiedChinese: return "setting.language.simplifiedChinese"
-        case .traditionalChinese: return "setting.language.traditionalChinese"
-        case .french: return "setting.language.french"
         case .german: return "setting.language.german"
+        case .english: return "setting.language.english"
+        case .french: return "setting.language.french"
         case .italian: return "setting.language.italian"
         case .japanese: return "setting.language.japanese"
         case .korean: return "setting.language.korean"
+        case .simplifiedChinese: return "setting.language.simplifiedChinese"
+        case .traditionalChinese: return "setting.language.traditionalChinese"
         }
     }
 }
@@ -54,9 +54,11 @@ enum MetalFXMode: String, CaseIterable, Hashable, Identifiable, Sendable {
 @Observable
 final class SettingService {
     private enum Keys {
-        static let appLanguage = "appLanguage"
-        static let isMetalFXEnabled = "isMetalFXEnabled"
-        static let metalFXMode = "metalFXMode"
+        private static let prefix = "com.touhouasia.Velare"
+
+        static let appLanguage = "\(prefix).appLanguage"
+        static let isMetalFXEnabled = "\(prefix).isMetalFXEnabled"
+        static let metalFXMode = "\(prefix).metalFXMode"
     }
 
     var appLanguage: AppLanguage {
@@ -91,6 +93,6 @@ final class SettingService {
         // 从 UserDefaults 加载已保存的设置，如果没有则使用默认值
         self.appLanguage = AppLanguage(rawValue: UserDefaults.standard.string(forKey: Keys.appLanguage) ?? "system") ?? .systemDefault
         self.isMetalFXEnabled = UserDefaults.standard.bool(forKey: Keys.isMetalFXEnabled)
-        self.metalFXMode = MetalFXMode(rawValue: UserDefaults.standard.string(forKey: Keys.metalFXMode) ?? "quality") ?? .quality
+        self.metalFXMode = MetalFXMode(rawValue: UserDefaults.standard.string(forKey: Keys.metalFXMode) ?? "quality") ?? .balanced
     }
 }

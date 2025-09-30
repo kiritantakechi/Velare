@@ -13,19 +13,19 @@ final class SettingViewModel {
     private let settingService: SettingService
     
     var appLanguage: AppLanguage {
-            get { settingService.appLanguage }
-            set { settingService.appLanguage = newValue }
-        }
+        get { settingService.appLanguage }
+        set { settingService.appLanguage = newValue }
+    }
         
-        var isMetalFXEnabled: Bool {
-            get { settingService.isMetalFXEnabled }
-            set { settingService.isMetalFXEnabled = newValue }
-        }
+    var isMetalFXEnabled: Bool {
+        get { settingService.isMetalFXEnabled }
+        set { settingService.isMetalFXEnabled = newValue }
+    }
         
-        var metalFXMode: MetalFXMode {
-            get { settingService.metalFXMode }
-            set { settingService.metalFXMode = newValue }
-        }
+    var metalFXMode: MetalFXMode {
+        get { settingService.metalFXMode }
+        set { settingService.metalFXMode = newValue }
+    }
     
     init(coordinator: AppCoordinator) {
         self.coordinator = coordinator
