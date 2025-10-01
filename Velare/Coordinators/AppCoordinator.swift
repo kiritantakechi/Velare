@@ -39,7 +39,9 @@ enum AppRoute: String, CaseIterable, Hashable, Identifiable, Sendable {
 final class AppCoordinator {
     var selectedRoute: AppRoute?
 
+    let captureService = CaptureService()
     let permissionService = PermissionService()
+    let processingPipeline = ProcessingPipeline()
     let settingService = SettingService()
     let systemMonitorService = SystemMonitorService()
     let windowDiscoveryService = WindowDiscoveryService()

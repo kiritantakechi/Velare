@@ -28,8 +28,6 @@ struct CoordinatorView: View {
                 }
                 .scrollIndicators(.hidden)
                 .disabled(viewModel.isLoading)
-                .navigationTitle("coordinator.view.navigation.title")
-                .navigationSplitViewColumnWidth(min: 160, ideal: 200)
             } detail: {
                 Group {
                     if let route = viewModel.selectedRoute {
@@ -52,11 +50,11 @@ struct CoordinatorView: View {
                         }
                     }
                 }
-//                // 无法解决的国际化 Bug
-//                .navigationTitle(
-//                    LocalizedStringKey(viewModel.selectedRoute?.localizationKey ?? "coordinator.view.navigation.title")
-//                )
             }
+            .navigationTitle("coordinator.view.navigation.title")
+            // 无法解决的国际化 Bug
+            //.navigationTitle(LocalizedStringKey(viewModel.selectedRoute?.localizationKey ?? "coordinator.view.navigation.title"))
+            .navigationSplitViewColumnWidth(min: 160, ideal: 200)
             .frame(minWidth: 600, minHeight: 480)
             .onAppear {
                 viewModel.start()

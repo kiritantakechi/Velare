@@ -10,6 +10,7 @@ import SwiftUI
 @Observable
 final class CaptureViewModel {
     private let coordinator: AppCoordinator
+    private let captureService: CaptureService
     private let windowDiscoveryService: WindowDiscoveryService
 
     var availableWindows: [WindowInfo] { windowDiscoveryService.availableWindows }
@@ -27,25 +28,22 @@ final class CaptureViewModel {
         }
     }
 
-    var isCapturing: Bool = false
+    var isCapturing: Bool { captureService.isCapturing }
+
     var isRefreshing: Bool = false
 
     init(coordinator: AppCoordinator) {
         self.coordinator = coordinator
+        self.captureService = coordinator.captureService
         self.windowDiscoveryService = coordinator.windowDiscoveryService
+
+        guard !isCapturing else { return }
+
         refreshWindows()
     }
 
     func toggleCapture() {
-        isCapturing.toggle()
-
-        if isCapturing {
-            // 在这里开始捕获的逻辑...
-            print("开始捕获窗口: \(selectedWindowID ?? 0)")
-        } else {
-            // 在这里停止捕获的逻辑...
-            print("停止捕获。")
-        }
+        captureService.toggleCapture(by: selectedWindowID ?? 0)
     }
 
     func refreshWindows(interval: TimeInterval = 0.1) {

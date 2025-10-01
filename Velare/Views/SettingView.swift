@@ -25,7 +25,6 @@ struct SettingView: View {
                         }
                     }
                     .pickerStyle(.menu)
-                    .frame(maxWidth: 300)
                 }
 
                 Section(header: Text("setting.view.section.videoProcessing")) {
