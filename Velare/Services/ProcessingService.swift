@@ -17,9 +17,9 @@ final class ProcessingService {
                 // 假设一个 SDRtoHDRProcessor
                 // processors.append(SDRtoHDRProcessor(model: setting.hdrConversionModel))
             }
-            if setting.isMetalFXEnabled {
-                // 假设一个 MetalFXProcessor
-                // processors.append(MetalFXProcessor(mode: setting.metalFXMode))
+            if setting.isMetalFXUpscalingEnabled {
+                // 假设一个 MetalFXUpscalingProcessor
+                // processors.append(MetalFXUpscalingProcessor(mode: setting.upscalingMode))
             }
             if setting.isMetalFXFrameInterpolationEnabled {
                 // 假设一个 FrameInterpolationProcessor

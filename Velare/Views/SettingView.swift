@@ -35,24 +35,24 @@ struct SettingView: View {
                         in: 24 ... 144
                     )
 
-                    Divider()
+                    // Divider()
 
                     // --- MetalFX 性能增强 ---
-                    Toggle(isOn: $viewModel.isMetalFXEnabled) {
-                        Text("setting.view.metalfx.enable.label")
-                        Text("setting.view.metalfx.enable.description")
+                    Toggle(isOn: $viewModel.isMetalFXUpscalingEnabled) {
+                        Text("setting.view.metalfx.upscaling.label")
+                        Text("setting.view.metalfx.upscaling.description")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
 
                     // MetalFX 模式选择，紧跟其主开关
-                    Picker("setting.view.metalfx.modePicker.label", selection: $viewModel.metalFXMode) {
-                        ForEach(MetalFXMode.allCases) { mode in
+                    Picker("setting.view.metalfx.modePicker.label", selection: $viewModel.upscalingMode) {
+                        ForEach(UpscalingMode.allCases) { mode in
                             Text(LocalizedStringKey(mode.localizationKey)).tag(mode)
                         }
                     }
                     .pickerStyle(.menu)
-                    .disabled(!viewModel.isMetalFXEnabled)
+                    .disabled(!viewModel.isMetalFXUpscalingEnabled)
 
                     Toggle(isOn: $viewModel.isMetalFXFrameInterpolationEnabled) {
                         Text("setting.view.metalfx.frameInterpolation.label")
@@ -60,9 +60,8 @@ struct SettingView: View {
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
-                    .disabled(!viewModel.isMetalFXEnabled)
 
-                    Divider()
+                    // Divider()
 
                     // --- SDR 到 HDR 转换 ---
                     Toggle(isOn: $viewModel.isSdrToHdrConversionEnabled) {

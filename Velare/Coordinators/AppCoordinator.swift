@@ -38,14 +38,24 @@ enum AppRoute: String, CaseIterable, Hashable, Identifiable, Sendable {
 final class AppCoordinator {
     var selectedRoute: AppRoute?
 
-    let captureService = CaptureService()
-    let permissionService = PermissionService()
-    let processingPipeline = ProcessingPipeline()
-    let settingService = SettingService()
-    let systemMonitorService = SystemMonitorService()
-    let windowDiscoveryService = WindowDiscoveryService()
+    let captureService: CaptureService
+    let permissionService: PermissionService
+    let processingService: ProcessingService
+    let settingService: SettingService
+    let systemMonitorService: SystemMonitorService
+    let windowDiscoveryService: WindowDiscoveryService
 
     private(set) var isLoading = true
+
+    init() {
+        settingService = SettingService()
+
+        captureService = CaptureService()
+        permissionService = PermissionService()
+        processingService = ProcessingService(setting: settingService)
+        systemMonitorService = SystemMonitorService()
+        windowDiscoveryService = WindowDiscoveryService()
+    }
 
     func start() async {
         await checkPermissions()

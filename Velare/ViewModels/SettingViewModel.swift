@@ -22,14 +22,14 @@ final class SettingViewModel {
         set { settingService.inputFramerate = newValue }
     }
         
-    var isMetalFXEnabled: Bool {
-        get { settingService.isMetalFXEnabled }
-        set { settingService.isMetalFXEnabled = newValue }
+    var isMetalFXUpscalingEnabled: Bool {
+        get { settingService.isMetalFXUpscalingEnabled }
+        set { settingService.isMetalFXUpscalingEnabled = newValue }
     }
         
-    var metalFXMode: MetalFXMode {
-        get { settingService.metalFXMode }
-        set { settingService.metalFXMode = newValue }
+    var upscalingMode: UpscalingMode {
+        get { settingService.upscalingMode }
+        set { settingService.upscalingMode = newValue }
     }
         
     var isMetalFXFrameInterpolationEnabled: Bool {

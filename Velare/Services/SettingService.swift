@@ -35,7 +35,7 @@ enum AppLanguage: String, CaseIterable, Hashable, Identifiable, Sendable {
     }
 }
 
-enum MetalFXMode: String, CaseIterable, Hashable, Identifiable, Sendable {
+enum UpscalingMode: String, CaseIterable, Hashable, Identifiable, Sendable {
     case performance
     case balanced
     case quality
@@ -70,8 +70,8 @@ final class SettingService {
 
         static let appLanguage = "\(prefix).appLanguage"
         static let inputFramerate = "\(prefix).inputFramerate"
-        static let isMetalFXEnabled = "\(prefix).isMetalFXEnabled"
-        static let metalFXMode = "\(prefix).metalFXMode"
+        static let isMetalFXUpscalingEnabled = "\(prefix).isMetalFXUpscalingEnabled"
+        static let upscalingMode = "\(prefix).upscalingMode"
         static let isMetalFXFrameInterpolationEnabled = "\(prefix).isMetalFXFrameInterpolationEnabled"
         static let isSdrToHdrConversionEnabled = "\(prefix).isSdrToHdrConversionEnabled"
         static let hdrConversionModel = "\(prefix).hdrConversionModel"
@@ -99,15 +99,15 @@ final class SettingService {
         }
     }
 
-    var isMetalFXEnabled: Bool {
+    var isMetalFXUpscalingEnabled: Bool {
         didSet {
-            UserDefaults.standard.setValue(isMetalFXEnabled, forKey: Keys.isMetalFXEnabled)
+            UserDefaults.standard.setValue(isMetalFXUpscalingEnabled, forKey: Keys.isMetalFXUpscalingEnabled)
         }
     }
 
-    var metalFXMode: MetalFXMode {
+    var upscalingMode: UpscalingMode {
         didSet {
-            UserDefaults.standard.setValue(metalFXMode.rawValue, forKey: Keys.metalFXMode)
+            UserDefaults.standard.setValue(upscalingMode.rawValue, forKey: Keys.upscalingMode)
         }
     }
 
@@ -133,8 +133,8 @@ final class SettingService {
         UserDefaults.standard.register(defaults: [
             Keys.appLanguage: AppLanguage.systemDefault.rawValue,
             Keys.inputFramerate: 60,
-            Keys.isMetalFXEnabled: false,
-            Keys.metalFXMode: MetalFXMode.balanced.rawValue,
+            Keys.isMetalFXUpscalingEnabled: false,
+            Keys.upscalingMode: UpscalingMode.balanced.rawValue,
             Keys.isMetalFXFrameInterpolationEnabled: false,
             Keys.isSdrToHdrConversionEnabled: false,
             Keys.hdrConversionModel: HdrConversionModel.animeHdr.rawValue
@@ -143,8 +143,8 @@ final class SettingService {
         // 现在可以直接加载，如果值不存在，UserDefaults 会自动返回上面注册的默认值
         self.appLanguage = AppLanguage(rawValue: UserDefaults.standard.string(forKey: Keys.appLanguage)!)!
         self.inputFramerate = UserDefaults.standard.integer(forKey: Keys.inputFramerate)
-        self.isMetalFXEnabled = UserDefaults.standard.bool(forKey: Keys.isMetalFXEnabled)
-        self.metalFXMode = MetalFXMode(rawValue: UserDefaults.standard.string(forKey: Keys.metalFXMode)!)!
+        self.isMetalFXUpscalingEnabled = UserDefaults.standard.bool(forKey: Keys.isMetalFXUpscalingEnabled)
+        self.upscalingMode = UpscalingMode(rawValue: UserDefaults.standard.string(forKey: Keys.upscalingMode)!)!
         self.isMetalFXFrameInterpolationEnabled = UserDefaults.standard.bool(forKey: Keys.isMetalFXFrameInterpolationEnabled)
         self.isSdrToHdrConversionEnabled = UserDefaults.standard.bool(forKey: Keys.isSdrToHdrConversionEnabled)
         self.hdrConversionModel = HdrConversionModel(rawValue: UserDefaults.standard.string(forKey: Keys.hdrConversionModel)!)!

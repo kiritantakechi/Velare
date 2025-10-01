@@ -842,7 +842,55 @@
         }
       }
     },
-    "setting.view.metalfx.enable.description" : {
+    "setting.view.metalfx.frameInterpolation.description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doubles the framerate for smoother motion. Requires significant performance."
+          }
+        }
+      }
+    },
+    "setting.view.metalfx.frameInterpolation.label" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable MetalFX Frame Interpolation"
+          }
+        }
+      }
+    },
+    "setting.view.metalfx.modePicker.label" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upscaling Mode"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "モード"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "模式"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "模式"
+          }
+        }
+      }
+    },
+    "setting.view.metalfx.upscaling.description" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -870,78 +918,30 @@
         }
       }
     },
-    "setting.view.metalfx.enable.label" : {
+    "setting.view.metalfx.upscaling.label" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enable MetalFX"
+            "value" : "Enable MetalFX Upscaling"
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "MetalFX を有効にする"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "启用 MetalFX"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "啟用 MetalFX"
-          }
-        }
-      }
-    },
-    "setting.view.metalfx.frameInterpolation.description" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Doubles the framerate for smoother motion. Requires significant performance."
-          }
-        }
-      }
-    },
-    "setting.view.metalfx.frameInterpolation.label" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enable MetalFX Frame Generation"
-          }
-        }
-      }
-    },
-    "setting.view.metalfx.modePicker.label" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mode"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "モード"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "模式"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "模式"
           }
         }
       }
