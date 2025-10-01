@@ -15,6 +15,8 @@ final class CaptureViewModel {
 
     var availableWindows: [WindowInfo] { windowDiscoveryService.availableWindows }
 
+    var selectedWindow: WindowInfo? { windowDiscoveryService.selectedWindow }
+
     var selectedWindowID: CGWindowID? {
         get {
             windowDiscoveryService.selectedWindowID
@@ -43,7 +45,9 @@ final class CaptureViewModel {
     }
 
     func toggleCapture() {
-        captureService.toggleCapture(by: selectedWindowID ?? 0)
+        if let window = selectedWindow {
+            captureService.toggleCapture(for: window)
+        }
     }
 
     func refreshWindows(interval: TimeInterval = 0.1) {

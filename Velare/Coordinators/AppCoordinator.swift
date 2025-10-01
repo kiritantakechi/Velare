@@ -34,7 +34,6 @@ enum AppRoute: String, CaseIterable, Hashable, Identifiable, Sendable {
     }
 }
 
-@MainActor
 @Observable
 final class AppCoordinator {
     var selectedRoute: AppRoute?

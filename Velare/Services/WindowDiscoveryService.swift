@@ -11,6 +11,7 @@ import SwiftUI
 @Observable
 final class WindowDiscoveryService {
     private(set) var availableWindows: [WindowInfo] = []
+    private(set) var selectedWindow: WindowInfo?
     private(set) var selectedWindowID: CGWindowID?
 
     func refreshAvailableContent() async {
@@ -25,10 +26,13 @@ final class WindowDiscoveryService {
     }
 
     func selectWindow(by windowID: CGWindowID) {
-        selectedWindowID = availableWindows.first { $0.id == windowID }?.id ?? windowID
+        selectedWindow = availableWindows.first { $0.id == windowID }
+        // 待优化
+        selectedWindowID = selectedWindow?.id ?? windowID
     }
 
     func clearSelection() {
+        selectedWindow = nil
         selectedWindowID = nil
     }
 }
