@@ -23,7 +23,7 @@ struct PermissionView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 80, height: 80)
-                    .foregroundColor(.accentColor)
+                    .foregroundStyle(Color.accentColor)
                     .padding(.bottom, 10)
 
                 Text("permission.view.title")
@@ -33,7 +33,7 @@ struct PermissionView: View {
                 Text("permission.view.description")
                     .font(.body)
                     .multilineTextAlignment(.center)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
                     .padding(.horizontal)
 
                 Spacer()

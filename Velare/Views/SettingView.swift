@@ -21,41 +21,69 @@ struct SettingView: View {
                 Section(header: Text("setting.view.section.general")) {
                     Picker("setting.view.languagePicker.label", selection: $viewModel.appLanguage) {
                         ForEach(AppLanguage.allCases) { language in
-                            Text(
-                                LocalizedStringKey(language.localizationKey)
-                            )
-                            .tag(language)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    .frame(maxWidth: 300) // 限制选择器的宽度
-                }
-                Section(header: Text("setting.view.section.videoEnhancement")) {
-                    // MetalFX 开关
-                    Toggle(isOn: $viewModel.isMetalFXEnabled) {
-                        Text("setting.view.metalfx.enable.label")
-                        Text("setting.view.metalfx.enable.description")
-                            .font(.footnote)
-                            .foregroundColor(.secondary)
-                    }
-
-                    // MetalFX 模式选择
-                    Picker("setting.view.metalfx.modePicker.label", selection: $viewModel.metalFXMode) {
-                        ForEach(MetalFXMode.allCases) { mode in
-                            Text(
-                                LocalizedStringKey(mode.localizationKey)
-                            )
-                            .tag(mode)
+                            Text(LocalizedStringKey(language.localizationKey)).tag(language)
                         }
                     }
                     .pickerStyle(.menu)
                     .frame(maxWidth: 300)
-                    // 当 MetalFX 未启用时，禁用这个 Picker
+                }
+
+                Section(header: Text("setting.view.section.videoProcessing")) {
+                    // --- 通用视频设置 ---
+                    Stepper(
+                        "setting.framerate.label: \(viewModel.inputFramerate) FPS",
+                        value: $viewModel.inputFramerate,
+                        in: 24 ... 144
+                    )
+
+                    Divider()
+
+                    // --- MetalFX 性能增强 ---
+                    Toggle(isOn: $viewModel.isMetalFXEnabled) {
+                        Text("setting.view.metalfx.enable.label")
+                        Text("setting.view.metalfx.enable.description")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    // MetalFX 模式选择，紧跟其主开关
+                    Picker("setting.view.metalfx.modePicker.label", selection: $viewModel.metalFXMode) {
+                        ForEach(MetalFXMode.allCases) { mode in
+                            Text(LocalizedStringKey(mode.localizationKey)).tag(mode)
+                        }
+                    }
+                    .pickerStyle(.menu)
                     .disabled(!viewModel.isMetalFXEnabled)
-                    .tint(viewModel.isMetalFXEnabled ? .primary : .secondary)
+
+                    Toggle(isOn: $viewModel.isMetalFrameGenerationEnabled) {
+                        Text("setting.frameGeneration.label")
+                        Text("setting.frameGeneration.description")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                    .disabled(!viewModel.isMetalFXEnabled)
+
+                    Divider()
+
+                    // --- SDR 到 HDR 转换 ---
+                    Toggle(isOn: $viewModel.isSdrToHdrConversionEnabled) {
+                        Text("setting.sdrToHdr.label")
+                        Text("setting.sdrToHdr.description")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    // HDR 转换模型选择
+                    Picker("setting.hdrModel.label", selection: $viewModel.hdrConversionModel) {
+                        ForEach(HdrConversionModel.allCases) { model in
+                            Text(LocalizedStringKey(model.localizationKey)).tag(model)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .disabled(!viewModel.isSdrToHdrConversionEnabled)
                 }
             }
-            .formStyle(.grouped) // 提供分组样式
+            .formStyle(.grouped)
             .padding()
         }
     }

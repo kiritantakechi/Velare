@@ -31,6 +31,8 @@ struct CaptureView: View {
                 }
                 .listStyle(.bordered(alternatesRowBackgrounds: true))
                 .scrollIndicators(.hidden)
+                .opacity(viewModel.isCapturing ? 0.5 : 1.0)
+                .disabled(viewModel.isCapturing)
             }
             .padding()
             .toolbar {
@@ -45,9 +47,15 @@ struct CaptureView: View {
                                 }
                             }
                     }
-                    .disabled(viewModel.isRefreshing)
+                    .disabled(viewModel.isRefreshing || viewModel.isCapturing)
+
+                    Button(action: { viewModel.toggleCapture() }) {
+                        Image(systemName: viewModel.isCapturing ? "stop.circle.fill" : "play.circle.fill")
+                    }
+                    .disabled(viewModel.selectedWindowID == nil)
                 }
             }
+            .animation(.easeInOut, value: viewModel.isCapturing)
         }
     }
 }

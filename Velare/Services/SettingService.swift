@@ -51,6 +51,18 @@ enum MetalFXMode: String, CaseIterable, Hashable, Identifiable, Sendable {
     }
 }
 
+enum HdrConversionModel: String, CaseIterable, Hashable, Identifiable, Sendable {
+    case animeHdr
+
+    var id: String { rawValue }
+
+    var localizationKey: String {
+        switch self {
+        case .animeHdr: return "setting.hdr.model.animeHdr"
+        }
+    }
+}
+
 @Observable
 final class SettingService {
     private enum Keys {
@@ -59,6 +71,10 @@ final class SettingService {
         static let appLanguage = "\(prefix).appLanguage"
         static let isMetalFXEnabled = "\(prefix).isMetalFXEnabled"
         static let metalFXMode = "\(prefix).metalFXMode"
+        static let inputFramerate = "\(prefix).inputFramerate"
+        static let isMetalFrameGenerationEnabled = "\(prefix).isMetalFrameGenerationEnabled"
+        static let isSdrToHdrConversionEnabled = "\(prefix).isSdrToHdrConversionEnabled"
+        static let hdrConversionModel = "\(prefix).hdrConversionModel"
     }
 
     var appLanguage: AppLanguage {
@@ -89,10 +105,48 @@ final class SettingService {
         }
     }
 
+    var inputFramerate: Int {
+        didSet {
+            UserDefaults.standard.setValue(inputFramerate, forKey: Keys.inputFramerate)
+        }
+    }
+
+    var isMetalFrameGenerationEnabled: Bool {
+        didSet {
+            UserDefaults.standard.setValue(isMetalFrameGenerationEnabled, forKey: Keys.isMetalFrameGenerationEnabled)
+        }
+    }
+
+    var isSdrToHdrConversionEnabled: Bool {
+        didSet {
+            UserDefaults.standard.setValue(isSdrToHdrConversionEnabled, forKey: Keys.isSdrToHdrConversionEnabled)
+        }
+    }
+
+    var hdrConversionModel: HdrConversionModel {
+        didSet {
+            UserDefaults.standard.setValue(hdrConversionModel.rawValue, forKey: Keys.hdrConversionModel)
+        }
+    }
+
     init() {
-        // 从 UserDefaults 加载已保存的设置，如果没有则使用默认值
-        self.appLanguage = AppLanguage(rawValue: UserDefaults.standard.string(forKey: Keys.appLanguage) ?? "system") ?? .systemDefault
+        UserDefaults.standard.register(defaults: [
+            Keys.appLanguage: AppLanguage.systemDefault.rawValue,
+            Keys.isMetalFXEnabled: false,
+            Keys.metalFXMode: MetalFXMode.balanced.rawValue,
+            Keys.inputFramerate: 60,
+            Keys.isMetalFrameGenerationEnabled: false,
+            Keys.isSdrToHdrConversionEnabled: false,
+            Keys.hdrConversionModel: HdrConversionModel.animeHdr.rawValue
+        ])
+
+        // 现在可以直接加载，如果值不存在，UserDefaults 会自动返回上面注册的默认值
+        self.appLanguage = AppLanguage(rawValue: UserDefaults.standard.string(forKey: Keys.appLanguage)!)!
         self.isMetalFXEnabled = UserDefaults.standard.bool(forKey: Keys.isMetalFXEnabled)
-        self.metalFXMode = MetalFXMode(rawValue: UserDefaults.standard.string(forKey: Keys.metalFXMode) ?? "quality") ?? .balanced
+        self.metalFXMode = MetalFXMode(rawValue: UserDefaults.standard.string(forKey: Keys.metalFXMode)!)!
+        self.inputFramerate = UserDefaults.standard.integer(forKey: Keys.inputFramerate)
+        self.isMetalFrameGenerationEnabled = UserDefaults.standard.bool(forKey: Keys.isMetalFrameGenerationEnabled)
+        self.isSdrToHdrConversionEnabled = UserDefaults.standard.bool(forKey: Keys.isSdrToHdrConversionEnabled)
+        self.hdrConversionModel = HdrConversionModel(rawValue: UserDefaults.standard.string(forKey: Keys.hdrConversionModel)!)!
     }
 }

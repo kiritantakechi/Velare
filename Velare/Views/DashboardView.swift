@@ -34,7 +34,7 @@ struct DashboardView: View {
 
     private var cpuCard: some View {
         MetricCard(
-            title: LocalizedStringKey("dashboard.view.cpuCard.title"),
+            title: String(localized: "dashboard.view.cpuCard.title"),
             iconName: "cpu",
             iconColor: .blue,
             valueText: viewModel.cpuUsagePercentage
@@ -47,7 +47,7 @@ struct DashboardView: View {
 
     private var memoryCard: some View {
         MetricCard(
-            title: LocalizedStringKey("dashboard.view.memoryCard.title"),
+            title: String(localized: "dashboard.view.memoryCard.title"),
             iconName: "memorychip",
             iconColor: .green,
             valueText: viewModel.memoryUsageDescription
@@ -60,7 +60,7 @@ struct DashboardView: View {
 }
 
 struct MetricCard<Content: View>: View {
-    let title: LocalizedStringKey
+    let title: String
     let iconName: String
     let iconColor: Color
     let valueText: String
@@ -71,18 +71,18 @@ struct MetricCard<Content: View>: View {
             HStack {
                 Image(systemName: iconName)
                     .font(.title2)
-                    .foregroundColor(iconColor)
+                    .foregroundStyle(iconColor)
                     .frame(width: 30)
 
                 Text(title)
                     .font(.headline)
-                    .foregroundColor(.primary)
+                    .foregroundStyle(.primary)
 
                 Spacer()
 
                 Text(valueText)
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
                     .monospacedDigit()
             }
             content
@@ -97,9 +97,9 @@ struct MetricCard<Content: View>: View {
     }
 }
 
-//#Preview {
+// #Preview {
 //    let service = SystemMonitorService()
 //    let viewModel = DashboardViewModel(monitorService: service)
 //    DashboardView(viewModel: viewModel)
 //        .frame(width: 600, height: 400)
-//}
+// }

@@ -27,12 +27,25 @@ final class CaptureViewModel {
         }
     }
 
-    var isRefreshing = false
+    var isCapturing: Bool = false
+    var isRefreshing: Bool = false
 
     init(coordinator: AppCoordinator) {
         self.coordinator = coordinator
         self.windowDiscoveryService = coordinator.windowDiscoveryService
         refreshWindows()
+    }
+
+    func toggleCapture() {
+        isCapturing.toggle()
+
+        if isCapturing {
+            // 在这里开始捕获的逻辑...
+            print("开始捕获窗口: \(selectedWindowID ?? 0)")
+        } else {
+            // 在这里停止捕获的逻辑...
+            print("停止捕获。")
+        }
     }
 
     func refreshWindows(interval: TimeInterval = 0.1) {

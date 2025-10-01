@@ -27,6 +27,26 @@ final class SettingViewModel {
         set { settingService.metalFXMode = newValue }
     }
     
+    var inputFramerate: Int {
+        get { settingService.inputFramerate }
+        set { settingService.inputFramerate = newValue }
+    }
+        
+    var isMetalFrameGenerationEnabled: Bool {
+        get { settingService.isMetalFrameGenerationEnabled }
+        set { settingService.isMetalFrameGenerationEnabled = newValue }
+    }
+        
+    var isSdrToHdrConversionEnabled: Bool {
+        get { settingService.isSdrToHdrConversionEnabled }
+        set { settingService.isSdrToHdrConversionEnabled = newValue }
+    }
+
+    var hdrConversionModel: HdrConversionModel {
+        get { settingService.hdrConversionModel }
+        set { settingService.hdrConversionModel = newValue }
+    }
+    
     init(coordinator: AppCoordinator) {
         self.coordinator = coordinator
         self.settingService = coordinator.settingService
