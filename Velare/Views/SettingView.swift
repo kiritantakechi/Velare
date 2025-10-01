@@ -30,7 +30,7 @@ struct SettingView: View {
                 Section(header: Text("setting.view.section.videoProcessing")) {
                     // --- 通用视频设置 ---
                     Stepper(
-                        "setting.framerate.label: \(viewModel.inputFramerate) FPS",
+                        "setting.view.framerate.label: \(viewModel.inputFramerate) FPS",
                         value: $viewModel.inputFramerate,
                         in: 24 ... 144
                     )
@@ -54,9 +54,9 @@ struct SettingView: View {
                     .pickerStyle(.menu)
                     .disabled(!viewModel.isMetalFXEnabled)
 
-                    Toggle(isOn: $viewModel.isMetalFrameGenerationEnabled) {
-                        Text("setting.frameGeneration.label")
-                        Text("setting.frameGeneration.description")
+                    Toggle(isOn: $viewModel.isMetalFXFrameInterpolationEnabled) {
+                        Text("setting.view.metalfx.frameInterpolation.label")
+                        Text("setting.view.metalfx.frameInterpolation.description")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
@@ -66,14 +66,14 @@ struct SettingView: View {
 
                     // --- SDR 到 HDR 转换 ---
                     Toggle(isOn: $viewModel.isSdrToHdrConversionEnabled) {
-                        Text("setting.sdrToHdr.label")
-                        Text("setting.sdrToHdr.description")
+                        Text("setting.view.sdrToHdr.label")
+                        Text("setting.view.sdrToHdr.description")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
 
                     // HDR 转换模型选择
-                    Picker("setting.hdrModel.label", selection: $viewModel.hdrConversionModel) {
+                    Picker("setting.view.hdrModel.label", selection: $viewModel.hdrConversionModel) {
                         ForEach(HdrConversionModel.allCases) { model in
                             Text(LocalizedStringKey(model.localizationKey)).tag(model)
                         }

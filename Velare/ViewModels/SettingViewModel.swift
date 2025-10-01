@@ -16,6 +16,11 @@ final class SettingViewModel {
         get { settingService.appLanguage }
         set { settingService.appLanguage = newValue }
     }
+    
+    var inputFramerate: Int {
+        get { settingService.inputFramerate }
+        set { settingService.inputFramerate = newValue }
+    }
         
     var isMetalFXEnabled: Bool {
         get { settingService.isMetalFXEnabled }
@@ -26,15 +31,10 @@ final class SettingViewModel {
         get { settingService.metalFXMode }
         set { settingService.metalFXMode = newValue }
     }
-    
-    var inputFramerate: Int {
-        get { settingService.inputFramerate }
-        set { settingService.inputFramerate = newValue }
-    }
         
-    var isMetalFrameGenerationEnabled: Bool {
-        get { settingService.isMetalFrameGenerationEnabled }
-        set { settingService.isMetalFrameGenerationEnabled = newValue }
+    var isMetalFXFrameInterpolationEnabled: Bool {
+        get { settingService.isMetalFXFrameInterpolationEnabled }
+        set { settingService.isMetalFXFrameInterpolationEnabled = newValue }
     }
         
     var isSdrToHdrConversionEnabled: Bool {

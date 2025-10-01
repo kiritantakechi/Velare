@@ -399,54 +399,6 @@
         }
       }
     },
-    "setting.frameGeneration.description" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Doubles the framerate for smoother motion. Requires significant performance."
-          }
-        }
-      }
-    },
-    "setting.frameGeneration.label" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enable Metal Frame Generation"
-          }
-        }
-      }
-    },
-    "setting.framerate.label: %lld FPS" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Input Framerate: %lld FPS"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "入力フレームレート: %lld FPS"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "输入帧率: %lld FPS"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "輸入幀率: %lld FPS"
-          }
-        }
-      }
-    },
     "setting.hdr.model.animeHdr" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -472,16 +424,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "AnimeHDR"
-          }
-        }
-      }
-    },
-    "setting.hdrModel.label" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "HDR Conversion Model"
           }
         }
       }
@@ -834,22 +776,40 @@
         }
       }
     },
-    "setting.sdrToHdr.description" : {
+    "setting.view.framerate.label: %lld FPS" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Converts Standard Dynamic Range video to High Dynamic Range."
+            "value" : "Input Framerate: %lld FPS"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "入力フレームレート: %lld FPS"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "输入帧率: %lld FPS"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "輸入幀率: %lld FPS"
           }
         }
       }
     },
-    "setting.sdrToHdr.label" : {
+    "setting.view.hdrModel.label" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enable SDR to HDR Conversion"
+            "value" : "HDR Conversion Model"
           }
         }
       }
@@ -938,6 +898,26 @@
         }
       }
     },
+    "setting.view.metalfx.frameInterpolation.description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doubles the framerate for smoother motion. Requires significant performance."
+          }
+        }
+      }
+    },
+    "setting.view.metalfx.frameInterpolation.label" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable MetalFX Frame Generation"
+          }
+        }
+      }
+    },
     "setting.view.metalfx.modePicker.label" : {
       "localizations" : {
         "en" : {
@@ -962,6 +942,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "模式"
+          }
+        }
+      }
+    },
+    "setting.view.sdrToHdr.description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Converts Standard Dynamic Range video to High Dynamic Range."
+          }
+        }
+      }
+    },
+    "setting.view.sdrToHdr.label" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable SDR to HDR Conversion"
           }
         }
       }

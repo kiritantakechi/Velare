@@ -69,10 +69,10 @@ final class SettingService {
         private static let prefix = "com.touhouasia.Velare"
 
         static let appLanguage = "\(prefix).appLanguage"
+        static let inputFramerate = "\(prefix).inputFramerate"
         static let isMetalFXEnabled = "\(prefix).isMetalFXEnabled"
         static let metalFXMode = "\(prefix).metalFXMode"
-        static let inputFramerate = "\(prefix).inputFramerate"
-        static let isMetalFrameGenerationEnabled = "\(prefix).isMetalFrameGenerationEnabled"
+        static let isMetalFXFrameInterpolationEnabled = "\(prefix).isMetalFXFrameInterpolationEnabled"
         static let isSdrToHdrConversionEnabled = "\(prefix).isSdrToHdrConversionEnabled"
         static let hdrConversionModel = "\(prefix).hdrConversionModel"
     }
@@ -92,6 +92,12 @@ final class SettingService {
         // 否则，根据我们枚举的 rawValue 创建一个指定的 locale
         return Locale(identifier: appLanguage.rawValue)
     }
+    
+    var inputFramerate: Int {
+        didSet {
+            UserDefaults.standard.setValue(inputFramerate, forKey: Keys.inputFramerate)
+        }
+    }
 
     var isMetalFXEnabled: Bool {
         didSet {
@@ -105,15 +111,9 @@ final class SettingService {
         }
     }
 
-    var inputFramerate: Int {
+    var isMetalFXFrameInterpolationEnabled: Bool {
         didSet {
-            UserDefaults.standard.setValue(inputFramerate, forKey: Keys.inputFramerate)
-        }
-    }
-
-    var isMetalFrameGenerationEnabled: Bool {
-        didSet {
-            UserDefaults.standard.setValue(isMetalFrameGenerationEnabled, forKey: Keys.isMetalFrameGenerationEnabled)
+            UserDefaults.standard.setValue(isMetalFXFrameInterpolationEnabled, forKey: Keys.isMetalFXFrameInterpolationEnabled)
         }
     }
 
@@ -132,20 +132,20 @@ final class SettingService {
     init() {
         UserDefaults.standard.register(defaults: [
             Keys.appLanguage: AppLanguage.systemDefault.rawValue,
+            Keys.inputFramerate: 60,
             Keys.isMetalFXEnabled: false,
             Keys.metalFXMode: MetalFXMode.balanced.rawValue,
-            Keys.inputFramerate: 60,
-            Keys.isMetalFrameGenerationEnabled: false,
+            Keys.isMetalFXFrameInterpolationEnabled: false,
             Keys.isSdrToHdrConversionEnabled: false,
             Keys.hdrConversionModel: HdrConversionModel.animeHdr.rawValue
         ])
 
         // 现在可以直接加载，如果值不存在，UserDefaults 会自动返回上面注册的默认值
         self.appLanguage = AppLanguage(rawValue: UserDefaults.standard.string(forKey: Keys.appLanguage)!)!
+        self.inputFramerate = UserDefaults.standard.integer(forKey: Keys.inputFramerate)
         self.isMetalFXEnabled = UserDefaults.standard.bool(forKey: Keys.isMetalFXEnabled)
         self.metalFXMode = MetalFXMode(rawValue: UserDefaults.standard.string(forKey: Keys.metalFXMode)!)!
-        self.inputFramerate = UserDefaults.standard.integer(forKey: Keys.inputFramerate)
-        self.isMetalFrameGenerationEnabled = UserDefaults.standard.bool(forKey: Keys.isMetalFrameGenerationEnabled)
+        self.isMetalFXFrameInterpolationEnabled = UserDefaults.standard.bool(forKey: Keys.isMetalFXFrameInterpolationEnabled)
         self.isSdrToHdrConversionEnabled = UserDefaults.standard.bool(forKey: Keys.isSdrToHdrConversionEnabled)
         self.hdrConversionModel = HdrConversionModel(rawValue: UserDefaults.standard.string(forKey: Keys.hdrConversionModel)!)!
     }
