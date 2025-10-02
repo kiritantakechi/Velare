@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct WindowAccessor: NSViewRepresentable {
+struct WindowAccessor: NSViewRepresentable, Sendable {
     var callback: (NSWindow) -> Void
 
     func makeNSView(context: Context) -> NSView {
         let view = NSView()
         DispatchQueue.main.async {
-            if let window = view.window {
+            if let window = unsafe view.window {
                 self.callback(window)
             }
         }

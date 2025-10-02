@@ -9,7 +9,7 @@ import SwiftUI
 
 @Observable
 final class CacheService {
-    private(set) var device: MTLDevice!
+    private(set) var device: (any MTLDevice)!
     private(set) var textureCache: CVMetalTextureCache!
 
     init() {
@@ -19,7 +19,7 @@ final class CacheService {
         self.device = device
 
         var cache: CVMetalTextureCache?
-        let result = CVMetalTextureCacheCreate(kCFAllocatorDefault, nil, device, nil, &cache)
+        let result = unsafe CVMetalTextureCacheCreate(kCFAllocatorDefault, nil, device, nil, &cache)
         guard result == kCVReturnSuccess, let textureCache = cache else {
             fatalError("无法创建 CVMetalTextureCache。")
         }

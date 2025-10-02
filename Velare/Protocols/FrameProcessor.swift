@@ -6,5 +6,5 @@
 //
 
 protocol FrameProcessor {
-    func process(_ frame: VideoFrame) async throws -> VideoFrame
+    func process(_ frame: consuming VideoFrame) async throws -> VideoFrame
 }

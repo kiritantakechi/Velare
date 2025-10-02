@@ -8,8 +8,8 @@
 import CoreMedia
 import Metal
 
-struct VideoFrame {
-    var texture: MTLTexture // 直接使用 Metal 纹理，效率最高
+struct VideoFrame: @unchecked Sendable {
+    var texture: any MTLTexture // 直接使用 Metal 纹理，效率最高
     let timestamp: CMTime
 
     init?(from sampleBuffer: CMSampleBuffer, textureCache: CVMetalTextureCache) {
@@ -28,7 +28,7 @@ struct VideoFrame {
 
         // 4. 使用 textureCache 从 imageBuffer 创建一个 Metal 纹理 (零拷贝)
         var cvMetalTexture: CVMetalTexture?
-        let status = CVMetalTextureCacheCreateTextureFromImage(
+        let status = unsafe CVMetalTextureCacheCreateTextureFromImage(
             kCFAllocatorDefault,
             textureCache,
             imageBuffer,
@@ -43,11 +43,17 @@ struct VideoFrame {
         // 5. 检查创建是否成功，并从中提取出 MTLTexture
         if status == kCVReturnSuccess, let metalTexture = cvMetalTexture {
             // CVMetalTextureGetTexture 会返回一个可选的 MTLTexture，我们解包它
-            guard let texture = CVMetalTextureGetTexture(metalTexture) else {
+            guard let originalTexture = CVMetalTextureGetTexture(metalTexture) else {
                 print("错误：无法从 CVMetalTexture 中获取 MTLTexture")
                 return nil
             }
-            self.texture = texture
+            // Create a new texture view to ensure a unique texture object for this frame.
+            // This is crucial for Sendable conformance and preventing data races.
+            guard let newTexture = originalTexture.makeTextureView(pixelFormat: originalTexture.pixelFormat) else {
+                print("错误：无法从原始纹理创建新的 TextureView")
+                return nil
+            }
+            self.texture = newTexture
         } else {
             print("错误：无法从 CVImageBuffer 创建 Metal 纹理，状态码: \(status)")
             return nil

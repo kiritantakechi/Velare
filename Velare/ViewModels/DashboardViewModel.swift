@@ -17,7 +17,7 @@ final class DashboardViewModel {
     }
 
     var cpuUsagePercentage: String {
-        String(format: "%.1f%%", monitorService.currentCPUUsage * 100)
+        unsafe String(format: "%.1f%%", monitorService.currentCPUUsage * 100)
     }
 
     var memoryUsage: MemoryUsage {
@@ -25,7 +25,7 @@ final class DashboardViewModel {
     }
 
     var memoryUsageDescription: String {
-        String(format: "%.2f GB / %.2f GB", memoryUsage.used, memoryUsage.total)
+        unsafe String(format: "%.2f GB / %.2f GB", memoryUsage.used, memoryUsage.total)
     }
 
     init(coordinator: AppCoordinator) {

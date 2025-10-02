@@ -12,7 +12,7 @@ internal import ScreenCaptureKit
 final class OverlayService {
     private let windowDiscoveryService: WindowDiscoveryService
 
-    private(set) var texture: MTLTexture?
+    private(set) var texture: (any MTLTexture)?
     private(set) var isTracking: Bool = false
 
     private var overlayWindow: NSWindow?
@@ -23,7 +23,7 @@ final class OverlayService {
         self.windowDiscoveryService = windowDiscoveryService
     }
 
-    func update(texture: MTLTexture) {
+    func update(texture: consuming any MTLTexture) {
         self.texture = texture
         print("🔄 [OverlayService] 纹理已更新")
     }

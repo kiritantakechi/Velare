@@ -49,9 +49,9 @@ final class SystemMonitorService {
         var stats = vm_statistics64()
         var size = mach_msg_type_number_t(MemoryLayout<vm_statistics64_data_t>.size / MemoryLayout<integer_t>.size)
 
-        let kerr = withUnsafeMutablePointer(to: &stats) {
-            $0.withMemoryRebound(to: integer_t.self, capacity: Int(size)) {
-                host_statistics64(mach_host_self(), HOST_VM_INFO64, $0, &size)
+        let kerr = unsafe withUnsafeMutablePointer(to: &stats) {
+            unsafe $0.withMemoryRebound(to: integer_t.self, capacity: Int(size)) {
+                unsafe host_statistics64(mach_host_self(), HOST_VM_INFO64, $0, &size)
             }
         }
 
@@ -76,9 +76,9 @@ final class SystemMonitorService {
         var cpuLoadInfo = host_cpu_load_info()
         var count = mach_msg_type_number_t(MemoryLayout<host_cpu_load_info_data_t>.size / MemoryLayout<integer_t>.size)
 
-        let result = withUnsafeMutablePointer(to: &cpuLoadInfo) {
-            $0.withMemoryRebound(to: integer_t.self, capacity: Int(count)) {
-                host_statistics(mach_host_self(), HOST_CPU_LOAD_INFO, $0, &count)
+        let result = unsafe withUnsafeMutablePointer(to: &cpuLoadInfo) {
+            unsafe $0.withMemoryRebound(to: integer_t.self, capacity: Int(count)) {
+                unsafe host_statistics(mach_host_self(), HOST_CPU_LOAD_INFO, $0, &count)
             }
         }
 

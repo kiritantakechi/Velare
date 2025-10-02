@@ -9,7 +9,7 @@ import SwiftUI
 
 @Observable
 final class ProcessingService {
-    private var processors: [FrameProcessor] = []
+    private var processors: [any FrameProcessor] = []
 
     // 在运行时根据设置来构建处理队列
     init(setting: SettingService) {
@@ -28,10 +28,10 @@ final class ProcessingService {
     }
 
     // 依次执行所有处理
-    func process(_ frame: VideoFrame) async throws -> VideoFrame {
+    func process(_ frame: consuming VideoFrame) async throws -> VideoFrame {
         var currentFrame = frame
         for processor in processors {
-            currentFrame = try await processor.process(currentFrame)
+            currentFrame = try await processor.process(consume currentFrame)
         }
         return currentFrame
     }

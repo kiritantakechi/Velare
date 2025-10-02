@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MetalView: NSViewRepresentable {
     let cacheService: CacheService
-    let texture: MTLTexture?
+    let texture: (any MTLTexture)?
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -40,10 +40,10 @@ struct MetalView: NSViewRepresentable {
     
     class Coordinator: NSObject, MTKViewDelegate {
         var parent: MetalView // 用于访问 cacheService
-        var texture: MTLTexture?
+        var texture: (any MTLTexture)?
             
         // ✅ Command Queue 也从 cacheService 的 device 创建
-        private let commandQueue: MTLCommandQueue
+        private let commandQueue: any MTLCommandQueue
 
         init(_ parent: MetalView) {
             self.parent = parent

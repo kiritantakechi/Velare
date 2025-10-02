@@ -15,7 +15,7 @@ final class OverlayViewModel {
 
     let cacheService: CacheService
 
-    var texture: MTLTexture? {
+    var texture: (any MTLTexture)? {
         overlayService.texture
     }
 
