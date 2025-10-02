@@ -40,10 +40,17 @@ final class PermissionService {
     }
 
     func openSystemSettingsForScreenCapture() {
+        let urlString: String
         if #available(macOS 13.0, *) {
-            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?Privacy_ScreenCapture")!)
+            urlString = "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?Privacy_ScreenCapture"
         } else {
-            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture")!)
+            urlString = "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture"
         }
+
+        guard let url = URL(string: urlString) else {
+            // In the unlikely event this fails, do nothing.
+            return
+        }
+        NSWorkspace.shared.open(url)
     }
 }

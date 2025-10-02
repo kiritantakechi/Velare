@@ -67,8 +67,7 @@ final class WindowDiscoveryService {
 
     func selectWindow(by windowID: CGWindowID) {
         selectedWindow = availableWindows.first { $0.windowID == windowID }
-        // 待优化
-        selectedWindowID = selectedWindow?.windowID ?? windowID
+        selectedWindowID = selectedWindow?.windowID
     }
 
     func clearSelection() {

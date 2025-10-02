@@ -32,25 +32,26 @@ final class CaptureService: NSObject {
         super.init()
     }
 
-    // 待优化
-    func toggleCapture(for window: SCWindow) {
-        if isCapturing {
-            // 如果正在捕获，则取消任务以停止
-            capturePipelineTask?.cancel()
+    // MARK: - Public API
+
+    func startCapture(for window: SCWindow) {
+        // Fix: If already capturing, do nothing.
+        guard !isCapturing else {
+            print("Capture is already in progress.")
             return
         }
+        // Fix: Set state synchronously to prevent race conditions.
+        isCapturing = true
 
         capturePipelineTask = Task {
             do {
-                isCapturing = true
+                // 1. Command OverlayService to start tracking.
+                self.overlayService.startTracking(window: window)
 
-                // 1. 命令 OverlayService 开始追踪
-                overlayService.startTracking(window: window)
+                // 2. Start the stream and get the data flow.
+                try await self.startStream(for: window)
 
-                // 2. 开始捕获并获取数据流
-                try await self.startCapture(for: window)
-
-                // 3. 异步循环处理每一帧
+                // 3. Asynchronously loop through each frame.
                 if let stream = self.frameStream {
                     for await sampleBuffer in stream {
                         try Task.checkCancellation()
@@ -60,25 +61,34 @@ final class CaptureService: NSObject {
                         }
 
                         let processedFrame = try await self.processingService.process(videoFrame)
-
-                        print("➡️ [CaptureService] 帧处理完成，准备更新 Overlay")
-
                         self.overlayService.update(texture: processedFrame.texture)
                     }
                 }
+            } catch is CancellationError {
+                print("Capture pipeline was cancelled.")
             } catch {
-                print("捕获管线因错误或取消而停止: \(error)")
+                print("Capture pipeline stopped due to error: \(error)")
             }
 
-            // 循环结束后（无论是正常结束还是被取消），执行清理
-            await stopCapture()
-            overlayService.stopTracking()
-            isCapturing = false
-            capturePipelineTask = nil
+            // --- Cleanup ---
+            await self.stopStream()
+            self.overlayService.stopTracking()
+            self.isCapturing = false
+            self.capturePipelineTask = nil
+            print("Capture pipeline and resources cleaned up.")
         }
     }
 
-    private func startCapture(for window: SCWindow) async throws {
+    func stopCapture() {
+        // If not capturing, do nothing.
+        guard isCapturing else { return }
+
+        // Cancel the main pipeline task.
+        // The cleanup is handled within the Task's completion block.
+        capturePipelineTask?.cancel()
+    }
+
+    private func startStream(for window: SCWindow) async throws {
         // 创建 AsyncStream
         frameStream = AsyncStream { continuation in
             self.streamContinuation = continuation
@@ -86,11 +96,13 @@ final class CaptureService: NSObject {
 
         let filter = SCContentFilter(desktopIndependentWindow: window)
         let config = SCStreamConfiguration()
-        
-        let liveFrame = windowDiscoveryService.findWindowFrame(by: window.windowID)
-        
-        config.width = Int(liveFrame!.width * 2) // 示例：以 Retina 分辨率捕获
-        config.height = Int(liveFrame!.height * 2)
+
+        guard let liveFrame = windowDiscoveryService.findWindowFrame(by: window.windowID) else {
+            throw NSError(domain: "CaptureService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Could not find window frame."])
+        }
+
+        config.width = Int(liveFrame.width * 2) // 示例：以 Retina 分辨率捕获
+        config.height = Int(liveFrame.height * 2)
         config.minimumFrameInterval = CMTime(value: 1, timescale: CMTimeScale(settingService.inputFramerate))
         config.pixelFormat = kCVPixelFormatType_32BGRA
 
@@ -99,7 +111,7 @@ final class CaptureService: NSObject {
         try await scStream?.startCapture()
     }
 
-    private func stopCapture() async {
+    private func stopStream() async {
         try? await scStream?.stopCapture()
         streamContinuation?.finish()
         scStream = nil

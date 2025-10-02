@@ -18,7 +18,7 @@ struct VelareApp: App {
             CoordinatorView(viewModel: coordinatorViewModel)
         }
 
-        Window("Velare Overlay", id: "overlay-window") {
+        Window("app.view.overlayWindow.title", id: "overlay-window") {
             let overlayViewModel = OverlayViewModel(coordinator: coordinator)
 
             OverlayView(viewModel: overlayViewModel)

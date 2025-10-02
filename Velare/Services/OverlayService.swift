@@ -39,27 +39,27 @@ final class OverlayService {
 
         trackingTask = Task {
             while !Task.isCancelled {
-                print("👁️ [OverlayService] 正在运行追踪循环...")
-                guard let liveFrame = self.windowDiscoveryService.findWindowFrame(by: window.windowID) else { break }
-                // 如果目标窗口的 frame 变化了，就更新覆盖窗口的 frame
-                guard liveFrame != self.targetFrame else { break }
-
-                self.targetFrame = liveFrame
-                self.overlayWindow?.setFrame(self.targetFrame, display: true, animate: false)
-
-                print("📍 [OverlayService] 目标窗口移动，更新 Frame 至: \(self.targetFrame)")
+                if let liveFrame = self.windowDiscoveryService.findWindowFrame(by: window.windowID) {
+                    if liveFrame != self.targetFrame {
+                        self.targetFrame = liveFrame
+                        self.overlayWindow?.setFrame(self.targetFrame, display: true, animate: false)
+                        print("📍 [OverlayService] 目标窗口移动，更新 Frame 至: \(self.targetFrame)")
+                    }
+                } else {
+                    // Window not found, break the loop.
+                    break
+                }
 
                 do {
-                    // 每秒检查 60 次，以保证流畅跟随
                     try await Task.sleep(for: .seconds(1.0 / 60.0))
                 } catch {
+                    // Task was cancelled during sleep.
                     break
                 }
             }
 
-            await MainActor.run {
-                self.stopTracking()
-            }
+            // Cleanup when loop exits.
+            self.stopTracking()
         }
     }
 

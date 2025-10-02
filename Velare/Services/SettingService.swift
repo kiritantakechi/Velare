@@ -140,13 +140,13 @@ final class SettingService {
             Keys.hdrConversionModel: HdrConversionModel.animeHdr.rawValue
         ])
 
-        // 现在可以直接加载，如果值不存在，UserDefaults 会自动返回上面注册的默认值
-        self.appLanguage = AppLanguage(rawValue: UserDefaults.standard.string(forKey: Keys.appLanguage)!)!
+        // Load values safely, falling back to registered defaults if anything goes wrong.
+        self.appLanguage = UserDefaults.standard.string(forKey: Keys.appLanguage).flatMap(AppLanguage.init) ?? .systemDefault
         self.inputFramerate = UserDefaults.standard.integer(forKey: Keys.inputFramerate)
         self.isMetalFXUpscalingEnabled = UserDefaults.standard.bool(forKey: Keys.isMetalFXUpscalingEnabled)
-        self.upscalingMode = UpscalingMode(rawValue: UserDefaults.standard.string(forKey: Keys.upscalingMode)!)!
+        self.upscalingMode = UserDefaults.standard.string(forKey: Keys.upscalingMode).flatMap(UpscalingMode.init) ?? .balanced
         self.isMetalFXFrameInterpolationEnabled = UserDefaults.standard.bool(forKey: Keys.isMetalFXFrameInterpolationEnabled)
         self.isSdrToHdrConversionEnabled = UserDefaults.standard.bool(forKey: Keys.isSdrToHdrConversionEnabled)
-        self.hdrConversionModel = HdrConversionModel(rawValue: UserDefaults.standard.string(forKey: Keys.hdrConversionModel)!)!
+        self.hdrConversionModel = UserDefaults.standard.string(forKey: Keys.hdrConversionModel).flatMap(HdrConversionModel.init) ?? .animeHdr
     }
 }
