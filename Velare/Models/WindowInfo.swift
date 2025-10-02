@@ -5,8 +5,8 @@
 //  Created by Kiritan on 2025/09/28.
 //
 
-import ScreenCaptureKit
 import SwiftUI
+internal import ScreenCaptureKit
 
 struct WindowInfo: Hashable, Identifiable, Sendable {
     let id: CGWindowID

@@ -10,6 +10,9 @@ import SwiftUI
 struct CaptureView: View {
     @State private var viewModel: CaptureViewModel
 
+    @Environment(\.openWindow) private var openWindow
+    @Environment(\.dismissWindow) private var dismissWindow
+
     init(viewModel: CaptureViewModel) {
         self.viewModel = viewModel
     }
@@ -49,7 +52,17 @@ struct CaptureView: View {
                     }
                     .disabled(viewModel.isRefreshing || viewModel.isCapturing)
 
-                    Button(action: { viewModel.toggleCapture() }) {
+                    Button(action: {
+                        if viewModel.isCapturing {
+                            // 如果正在捕获，就停止并关闭窗口
+                            viewModel.toggleCapture()
+                            dismissWindow(id: "overlay-window")
+                        } else {
+                            // 如果尚未捕获，就打开窗口并开始
+                            openWindow(id: "overlay-window")
+                            viewModel.toggleCapture()
+                        }
+                    }) {
                         Image(systemName: viewModel.isCapturing ? "stop.circle.fill" : "play.circle.fill")
                     }
                     .disabled(viewModel.selectedWindowID == nil)

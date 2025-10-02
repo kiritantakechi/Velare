@@ -17,5 +17,14 @@ struct VelareApp: App {
 
             CoordinatorView(viewModel: coordinatorViewModel)
         }
+
+        Window("Velare Overlay", id: "overlay-window") {
+            let overlayViewModel = OverlayViewModel(coordinator: coordinator)
+
+            OverlayView(viewModel: overlayViewModel)
+        }
+        .windowStyle(.hiddenTitleBar) // 隐藏标题栏
+        .windowResizability(.contentSize) // 窗口大小由内容决定
+        .defaultPosition(.center)
     }
 }

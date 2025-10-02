@@ -5,8 +5,8 @@
 //  Created by Kiritan on 2025/10/01.
 //
 
-import ScreenCaptureKit
 import SwiftUI
+internal import ScreenCaptureKit
 
 @Observable
 final class CaptureService: NSObject {
@@ -14,25 +14,66 @@ final class CaptureService: NSObject {
     private(set) var frameStream: AsyncStream<CMSampleBuffer>?
     private var streamContinuation: AsyncStream<CMSampleBuffer>.Continuation?
 
+    private var capturePipelineTask: Task<Void, Never>?
     private var scStream: SCStream?
 
-    override init() {
+    private let cacheService: CacheService
+    private let overlayService: OverlayService
+    private let processingService: ProcessingService
+    private let settingService: SettingService
+
+    init(cacheService: CacheService, overlayService: OverlayService, processingService: ProcessingService, settingService: SettingService) {
+        self.cacheService = cacheService
+        self.overlayService = overlayService
+        self.processingService = processingService
+        self.settingService = settingService
         super.init()
     }
 
+    // 待优化
     func toggleCapture(for window: WindowInfo) {
-        isCapturing.toggle()
-
         if isCapturing {
-            // 在这里开始捕获的逻辑...
-            print("开始捕获窗口: \(window.id)")
-        } else {
-            // 在这里停止捕获的逻辑...
-            print("停止捕获。")
+            // 如果正在捕获，则取消任务以停止
+            capturePipelineTask?.cancel()
+            return
+        }
+
+        capturePipelineTask = Task {
+            do {
+                isCapturing = true
+
+                // 1. 命令 OverlayService 开始追踪
+                overlayService.startTracking(window: window)
+
+                // 2. 开始捕获并获取数据流
+                try await self.startCapture(for: window)
+
+                // 3. 异步循环处理每一帧
+                if let stream = self.frameStream {
+                    for await sampleBuffer in stream {
+                        try Task.checkCancellation()
+
+                        guard let videoFrame = VideoFrame(from: sampleBuffer, textureCache: self.cacheService.textureCache) else {
+                            continue
+                        }
+
+                        let processedFrame = try await self.processingService.process(videoFrame)
+                        self.overlayService.update(texture: processedFrame.texture)
+                    }
+                }
+            } catch {
+                print("捕获管线因错误或取消而停止: \(error)")
+            }
+
+            // 循环结束后（无论是正常结束还是被取消），执行清理
+            await stopCapture()
+            overlayService.stopTracking()
+            isCapturing = false
+            capturePipelineTask = nil
         }
     }
 
-    private func startCapture(for window: WindowInfo, setting: SettingService) async throws {
+    private func startCapture(for window: WindowInfo) async throws {
         // 创建 AsyncStream
         frameStream = AsyncStream { continuation in
             self.streamContinuation = continuation
@@ -42,7 +83,7 @@ final class CaptureService: NSObject {
         let config = SCStreamConfiguration()
         config.width = Int(window.window.frame.width * 2) // 示例：以 Retina 分辨率捕获
         config.height = Int(window.window.frame.height * 2)
-        config.minimumFrameInterval = CMTime(value: 1, timescale: CMTimeScale(setting.inputFramerate))
+        config.minimumFrameInterval = CMTime(value: 1, timescale: CMTimeScale(settingService.inputFramerate))
         config.pixelFormat = kCVPixelFormatType_32BGRA
 
         scStream = SCStream(filter: filter, configuration: config, delegate: self)
@@ -61,7 +102,25 @@ final class CaptureService: NSObject {
 extension CaptureService: SCStreamDelegate, SCStreamOutput {
     func stream(_ stream: SCStream, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, of type: SCStreamOutputType) {
         guard sampleBuffer.isValid else { return }
-        // 当收到新的帧时，将其推送到 AsyncStream 中
+
+        guard let attachmentsArray = CMSampleBufferGetSampleAttachmentsArray(sampleBuffer, createIfNecessary: false) as? [[SCStreamFrameInfo: Any]],
+              let attachments = attachmentsArray.first
+        else {
+            return
+        }
+
+        // 2. 从附件中获取帧的状态
+        // 只有当状态为 .complete 时，才是一个可以处理的完整帧
+        guard let statusRawValue = attachments[SCStreamFrameInfo.status] as? Int,
+              let status = SCFrameStatus(rawValue: statusRawValue),
+              status == .complete
+        else {
+            // 否则，静默地丢弃这个 buffer (例如，当窗口内容没有变化时，就会收到 .idle 状态的 buffer)
+            return
+        }
+        
+        
+
         streamContinuation?.yield(sampleBuffer)
     }
 }

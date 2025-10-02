@@ -45,9 +45,9 @@ final class CaptureViewModel {
     }
 
     func toggleCapture() {
-        if let window = selectedWindow {
-            captureService.toggleCapture(for: window)
-        }
+        guard let window = selectedWindow else { return }
+        
+        captureService.toggleCapture(for: window)
     }
 
     func refreshWindows(interval: TimeInterval = 0.1) {
