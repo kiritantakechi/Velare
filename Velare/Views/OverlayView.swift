@@ -16,9 +16,7 @@ struct OverlayView: View {
     }
 
     var body: some View {
-        let metalViewModel = MetalViewModel(cacheService: viewModel.cacheService)
-        
-        MetalView(viewModel: metalViewModel, texture: viewModel.texture)
+        MetalView(cacheService: viewModel.cacheService, texture: viewModel.texture)
             .ignoresSafeArea()
             .background(WindowAccessor(callback: viewModel.setWindow)) // 用一个辅助视图来获取 NSWindow
     }

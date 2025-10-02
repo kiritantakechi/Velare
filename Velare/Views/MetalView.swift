@@ -9,8 +9,7 @@ import MetalKit
 import SwiftUI
 
 struct MetalView: NSViewRepresentable {
-    @State var viewModel: MetalViewModel
-
+    let cacheService: CacheService
     let texture: MTLTexture?
     
     func makeCoordinator() -> Coordinator {
@@ -22,7 +21,7 @@ struct MetalView: NSViewRepresentable {
         mtkView.delegate = context.coordinator
             
         // ✅ 使用来自 CacheService 的 device
-        mtkView.device = viewModel.device
+        mtkView.device = cacheService.device
             
         mtkView.framebufferOnly = false
         mtkView.isPaused = true
@@ -49,7 +48,7 @@ struct MetalView: NSViewRepresentable {
         init(_ parent: MetalView) {
             self.parent = parent
             // ✅ 在初始化时创建一次 Command Queue
-            guard let commandQueue = parent.viewModel.device.makeCommandQueue() else {
+            guard let commandQueue = parent.cacheService.device.makeCommandQueue() else {
                 fatalError("无法创建 Metal Command Queue")
             }
             self.commandQueue = commandQueue

@@ -51,9 +51,7 @@ struct CoordinatorView: View {
                     }
                 }
             }
-            .navigationTitle("coordinator.view.navigation.title")
-            // 无法解决的国际化 Bug
-            //.navigationTitle(LocalizedStringKey(viewModel.selectedRoute?.localizationKey ?? "coordinator.view.navigation.title"))
+            .navigationTitle(LocalizedStringKey(viewModel.selectedRoute?.localizationKey ?? "coordinator.view.navigation.title"))
             .navigationSplitViewColumnWidth(min: 160, ideal: 200)
             .frame(minWidth: 600, minHeight: 480)
             .onAppear {

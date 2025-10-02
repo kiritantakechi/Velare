@@ -10,6 +10,8 @@ internal import ScreenCaptureKit
 
 @Observable
 final class OverlayService {
+    private let windowDiscoveryService: WindowDiscoveryService
+
     private(set) var texture: MTLTexture?
     private(set) var isTracking: Bool = false
 
@@ -17,8 +19,13 @@ final class OverlayService {
     private var targetFrame: CGRect = .zero
     private var trackingTask: Task<Void, Never>?
 
+    init(windowDiscoveryService: WindowDiscoveryService) {
+        self.windowDiscoveryService = windowDiscoveryService
+    }
+
     func update(texture: MTLTexture) {
         self.texture = texture
+        print("🔄 [OverlayService] 纹理已更新")
     }
 
     func setWindow(_ window: NSWindow) {
@@ -26,17 +33,21 @@ final class OverlayService {
         configureWindow()
     }
 
-    func startTracking(window: WindowInfo) {
+    func startTracking(window: SCWindow) {
         guard trackingTask == nil else { return }
         isTracking = true
 
         trackingTask = Task {
             while !Task.isCancelled {
+                print("👁️ [OverlayService] 正在运行追踪循环...")
+                guard let liveFrame = self.windowDiscoveryService.findWindowFrame(by: window.windowID) else { break }
                 // 如果目标窗口的 frame 变化了，就更新覆盖窗口的 frame
-                if window.window.frame != self.targetFrame {
-                    self.targetFrame = window.window.frame
-                    self.overlayWindow?.setFrame(self.targetFrame, display: true, animate: false)
-                }
+                guard liveFrame != self.targetFrame else { break }
+
+                self.targetFrame = liveFrame
+                self.overlayWindow?.setFrame(self.targetFrame, display: true, animate: false)
+
+                print("📍 [OverlayService] 目标窗口移动，更新 Frame 至: \(self.targetFrame)")
 
                 do {
                     // 每秒检查 60 次，以保证流畅跟随
@@ -44,6 +55,10 @@ final class OverlayService {
                 } catch {
                     break
                 }
+            }
+
+            await MainActor.run {
+                self.stopTracking()
             }
         }
     }
@@ -61,5 +76,8 @@ final class OverlayService {
         overlayWindow?.level = .screenSaver // 让窗口保持在非常高的层级
         overlayWindow?.ignoresMouseEvents = true // 忽略鼠标事件，实现“点击穿透”
         overlayWindow?.hasShadow = false
+        overlayWindow?.standardWindowButton(.closeButton)?.isHidden = true
+        overlayWindow?.standardWindowButton(.miniaturizeButton)?.isHidden = true
+        overlayWindow?.standardWindowButton(.zoomButton)?.isHidden = true
     }
 }

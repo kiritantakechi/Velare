@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+internal import ScreenCaptureKit
 
 @Observable
 final class CaptureViewModel {
@@ -13,9 +14,9 @@ final class CaptureViewModel {
     private let captureService: CaptureService
     private let windowDiscoveryService: WindowDiscoveryService
 
-    var availableWindows: [WindowInfo] { windowDiscoveryService.availableWindows }
+    var availableWindows: [SCWindow] { windowDiscoveryService.availableWindows }
 
-    var selectedWindow: WindowInfo? { windowDiscoveryService.selectedWindow }
+    var selectedWindow: SCWindow? { windowDiscoveryService.selectedWindow }
 
     var selectedWindowID: CGWindowID? {
         get {

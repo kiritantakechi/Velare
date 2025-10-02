@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+internal import ScreenCaptureKit
 
 struct CaptureView: View {
     @State private var viewModel: CaptureViewModel
@@ -20,12 +21,12 @@ struct CaptureView: View {
     var body: some View {
         GlassEffectContainer {
             VStack {
-                List(viewModel.availableWindows, id: \.id, selection: $viewModel.selectedWindowID) { window in
+                List(viewModel.availableWindows, id: \.windowID, selection: $viewModel.selectedWindowID) { window in
                     HStack {
-                        Text(window.appName)
+                        Text(window.owningApplication?.applicationName ?? "Unknown")
                             .font(.body)
                         Spacer()
-                        Text(window.title)
+                        Text(window.title ?? "")
                             .lineLimit(1)
                             .truncationMode(.middle)
                             .foregroundStyle(.secondary)
@@ -59,8 +60,8 @@ struct CaptureView: View {
                             dismissWindow(id: "overlay-window")
                         } else {
                             // 如果尚未捕获，就打开窗口并开始
-                            openWindow(id: "overlay-window")
                             viewModel.toggleCapture()
+                            openWindow(id: "overlay-window")
                         }
                     }) {
                         Image(systemName: viewModel.isCapturing ? "stop.circle.fill" : "play.circle.fill")

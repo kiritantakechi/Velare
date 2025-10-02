@@ -53,13 +53,13 @@ final class AppCoordinator {
         settingService = SettingService()
 
         cacheService = CacheService()
-        overlayService = OverlayService()
         permissionService = PermissionService()
         systemMonitorService = SystemMonitorService()
         windowDiscoveryService = WindowDiscoveryService()
 
+        overlayService = OverlayService(windowDiscoveryService: windowDiscoveryService)
         processingService = ProcessingService(setting: settingService)
-        captureService = CaptureService(cacheService: cacheService, overlayService: overlayService, processingService: processingService, settingService: settingService)
+        captureService = CaptureService(cacheService: cacheService, overlayService: overlayService, processingService: processingService, settingService: settingService, windowDiscoveryService: windowDiscoveryService)
     }
 
     func start() async {

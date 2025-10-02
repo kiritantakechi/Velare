@@ -21,17 +21,19 @@ final class CaptureService: NSObject {
     private let overlayService: OverlayService
     private let processingService: ProcessingService
     private let settingService: SettingService
+    private let windowDiscoveryService: WindowDiscoveryService
 
-    init(cacheService: CacheService, overlayService: OverlayService, processingService: ProcessingService, settingService: SettingService) {
+    init(cacheService: CacheService, overlayService: OverlayService, processingService: ProcessingService, settingService: SettingService, windowDiscoveryService: WindowDiscoveryService) {
         self.cacheService = cacheService
         self.overlayService = overlayService
         self.processingService = processingService
         self.settingService = settingService
+        self.windowDiscoveryService = windowDiscoveryService
         super.init()
     }
 
     // 待优化
-    func toggleCapture(for window: WindowInfo) {
+    func toggleCapture(for window: SCWindow) {
         if isCapturing {
             // 如果正在捕获，则取消任务以停止
             capturePipelineTask?.cancel()
@@ -58,6 +60,9 @@ final class CaptureService: NSObject {
                         }
 
                         let processedFrame = try await self.processingService.process(videoFrame)
+
+                        print("➡️ [CaptureService] 帧处理完成，准备更新 Overlay")
+
                         self.overlayService.update(texture: processedFrame.texture)
                     }
                 }
@@ -73,16 +78,19 @@ final class CaptureService: NSObject {
         }
     }
 
-    private func startCapture(for window: WindowInfo) async throws {
+    private func startCapture(for window: SCWindow) async throws {
         // 创建 AsyncStream
         frameStream = AsyncStream { continuation in
             self.streamContinuation = continuation
         }
 
-        let filter = SCContentFilter(desktopIndependentWindow: window.window)
+        let filter = SCContentFilter(desktopIndependentWindow: window)
         let config = SCStreamConfiguration()
-        config.width = Int(window.window.frame.width * 2) // 示例：以 Retina 分辨率捕获
-        config.height = Int(window.window.frame.height * 2)
+        
+        let liveFrame = windowDiscoveryService.findWindowFrame(by: window.windowID)
+        
+        config.width = Int(liveFrame!.width * 2) // 示例：以 Retina 分辨率捕获
+        config.height = Int(liveFrame!.height * 2)
         config.minimumFrameInterval = CMTime(value: 1, timescale: CMTimeScale(settingService.inputFramerate))
         config.pixelFormat = kCVPixelFormatType_32BGRA
 
@@ -118,8 +126,9 @@ extension CaptureService: SCStreamDelegate, SCStreamOutput {
             // 否则，静默地丢弃这个 buffer (例如，当窗口内容没有变化时，就会收到 .idle 状态的 buffer)
             return
         }
-        
-        
+
+        let timestamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+        print("✅ [CaptureService] 收到新帧，时间戳: \(timestamp.seconds)")
 
         streamContinuation?.yield(sampleBuffer)
     }
