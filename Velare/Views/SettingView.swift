@@ -16,7 +16,6 @@ struct SettingView: View {
 
     var body: some View {
         GlassEffectContainer {
-            // Form 会自动提供平台原生的列表样式
             Form {
                 Section(header: Text("setting.view.section.general")) {
                     Picker("setting.view.languagePicker.label", selection: $viewModel.appLanguage) {
