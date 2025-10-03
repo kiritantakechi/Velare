@@ -47,7 +47,7 @@ final class AppCoordinator {
     let systemMonitorService: SystemMonitorService
     let windowDiscoveryService: WindowDiscoveryService
 
-    private(set) var isLoading = true
+    private(set) var isLoading: Bool = false
 
     init() {
         settingService = SettingService()
@@ -63,10 +63,11 @@ final class AppCoordinator {
     }
 
     func start() async {
-        await checkPermissions()
-        updateSystemMonitor()
+        guard !isLoading else { return }
+        isLoading = true
+        defer { isLoading = false }
 
-        isLoading = false
+        await checkPermissions()
     }
 
     private func checkPermissions() async {
@@ -78,10 +79,6 @@ final class AppCoordinator {
         else {
             permissionsDenied()
         }
-    }
-
-    private func updateSystemMonitor() {
-        systemMonitorService.updateMonitoring()
     }
 
     func selectRoute(_ route: AppRoute) {

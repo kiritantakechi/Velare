@@ -14,25 +14,16 @@ final class SystemMonitorService {
 
     private var monitoringTask: Task<Void, Never>?
     private var previousCpuLoadInfo: host_cpu_load_info?
-    
-    init() {}
+
+    init() {
+        Task { await updateMonitoring() }
+    }
 
     func startMonitoring(interval: TimeInterval = 1.0) {
-        // 防止重复启动
         guard monitoringTask == nil else { return }
 
         monitoringTask = Task {
-            while !Task.isCancelled {
-                updateMonitoring()
-
-                do {
-                    // 等待指定的时间间隔
-                    try await Task.sleep(for: .seconds(interval))
-                } catch {
-                    // 如果任务在睡眠时被取消，就退出循环
-                    break
-                }
-            }
+            await monitor(interval: interval)
         }
     }
 
@@ -42,12 +33,20 @@ final class SystemMonitorService {
         previousCpuLoadInfo = nil // 重置
     }
 
-    func updateMonitoring() {
-        updateCPUUsage()
-        updateMemoryUsage()
+    private func monitor(interval: TimeInterval = 1.0) async {
+        await updateMonitoring()
+        do {
+            try await Task.sleep(for: .seconds(interval))
+            await monitor(interval: interval)
+        } catch { print("Monitoring stopped due to cancellation.") }
     }
 
-    private func updateMemoryUsage() {
+    func updateMonitoring() async {
+        await updateCPUUsage()
+        await updateMemoryUsage()
+    }
+
+    private func updateMemoryUsage() async {
         var stats = vm_statistics64()
         var size = mach_msg_type_number_t(MemoryLayout<vm_statistics64_data_t>.size / MemoryLayout<integer_t>.size)
 
@@ -59,22 +58,16 @@ final class SystemMonitorService {
 
         guard kerr == KERN_SUCCESS else { return }
 
-        let pageSize = Double(vm_kernel_page_size)
-        let totalMemory = Double(ProcessInfo.processInfo.physicalMemory) / (1024 * 1024 * 1024) // GB
+        let gbFactor = 1.0 / Double(1 << 30)
+        let totalMemory = Double(ProcessInfo.processInfo.physicalMemory) * gbFactor
 
-        let wiredMemory = Double(stats.wire_count) * pageSize
-        let activeMemory = Double(stats.active_count) * pageSize
-        // let inactiveMemory = Double(stats.inactive_count) * pageSize
-        // let compressedMemory = Double(stats.compressor_page_count) * pageSize
-
-        // let usedMemory = (wiredMemory + activeMemory + inactiveMemory + compressedMemory) / (1024 * 1024 * 1024) // GB
-
-        let usedMemory = (wiredMemory + activeMemory) / (1024 * 1024 * 1024) // GB
+        let counts = UInt64(stats.wire_count) + UInt64(stats.active_count)
+        let usedMemory = Double(counts * UInt64(vm_kernel_page_size)) * gbFactor
 
         currentMemoryUsage = MemoryUsage(used: usedMemory, total: totalMemory)
     }
 
-    private func updateCPUUsage() {
+    private func updateCPUUsage() async {
         var cpuLoadInfo = host_cpu_load_info()
         var count = mach_msg_type_number_t(MemoryLayout<host_cpu_load_info_data_t>.size / MemoryLayout<integer_t>.size)
 
@@ -98,7 +91,7 @@ final class SystemMonitorService {
 
         if totalTicks > 0 {
             let usage = (userTicks + systemTicks + niceTicks) / totalTicks
-            currentCPUUsage = max(0.0, min(1.0, usage)) // 保证值在 0-1 之间
+            currentCPUUsage = fmax(0.0, fmin(1.0, usage)) // 保证值在 0-1 之间
         }
 
         previousCpuLoadInfo = cpuLoadInfo

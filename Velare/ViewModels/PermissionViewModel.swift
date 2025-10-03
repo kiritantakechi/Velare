@@ -19,6 +19,9 @@ final class PermissionViewModel {
     init(coordinator: AppCoordinator) {
         self.coordinator = coordinator
         self.permissionService = coordinator.permissionService
+    }
+    
+    func onAppear() {
         checkPermissions()
     }
     

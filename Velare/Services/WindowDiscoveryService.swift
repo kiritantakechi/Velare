@@ -13,13 +13,18 @@ final class WindowDiscoveryService {
     private(set) var availableWindows: [SCWindow] = []
     private(set) var selectedWindow: SCWindow?
     private(set) var selectedWindowID: CGWindowID?
-    
+
+    private(set) var isRefreshing: Bool = false
+
     init() {}
 
     func refreshAvailableContent() async {
+        guard !isRefreshing else { return }
+        isRefreshing = true
+        defer { isRefreshing = false }
+
         do {
             let content = try await SCShareableContent.current
-
             let validWindows = content.windows.filter(isValidWindow)
             if availableWindows != validWindows { availableWindows = validWindows }
         } catch {

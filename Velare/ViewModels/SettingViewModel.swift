@@ -51,4 +51,8 @@ final class SettingViewModel {
         self.coordinator = coordinator
         self.settingService = coordinator.settingService
     }
+    
+    func onAppear() {
+        
+    }
 }

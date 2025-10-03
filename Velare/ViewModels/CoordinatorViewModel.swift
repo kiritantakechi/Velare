@@ -12,11 +12,10 @@ final class CoordinatorViewModel {
     private unowned let coordinator: AppCoordinator
     private unowned let settingService: SettingService
 
+    var activeLocale: Locale { settingService.activeLocale }
     var selectedRoute: AppRoute? { get { coordinator.selectedRoute } set { coordinator.selectedRoute = newValue }}
     
     var isLoading: Bool { coordinator.isLoading }
-    
-    var activeLocale: Locale { settingService.activeLocale }
     
     init(coordinator: AppCoordinator) {
         self.coordinator = coordinator

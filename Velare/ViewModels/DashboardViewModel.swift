@@ -32,6 +32,10 @@ final class DashboardViewModel {
         self.coordinator = coordinator
         self.monitorService = coordinator.systemMonitorService
     }
+    
+    func onAppear() {
+        
+    }
 
     func startMonitoring() {
         monitorService.startMonitoring()

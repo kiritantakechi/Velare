@@ -22,6 +22,10 @@ final class OverlayViewModel {
         self.cacheService = coordinator.cacheService
         self.overlayService = coordinator.overlayService
     }
+    
+    func onAppear() {
+        
+    }
 
     func setWindow(_ window: NSWindow) {
         overlayService.setWindow(window)

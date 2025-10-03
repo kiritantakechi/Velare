@@ -32,8 +32,7 @@ final class CaptureViewModel {
     }
 
     var isCapturing: Bool { captureService.isCapturing }
-
-    var isRefreshing: Bool = false
+    var isRefreshing: Bool { windowDiscoveryService.isRefreshing }
 
     init(coordinator: AppCoordinator) {
         self.coordinator = coordinator
@@ -58,17 +57,11 @@ final class CaptureViewModel {
     }
 
     func refreshWindows(interval: TimeInterval = 0.1) {
-        guard !isRefreshing else { return }
-
-        isRefreshing = true
-
         Task {
             async let refreshTask: () = await windowDiscoveryService.refreshAvailableContent()
             async let sleepTask: () = (try? await Task.sleep(for: .seconds(interval))) ?? ()
 
             _ = await (refreshTask, sleepTask)
-
-            isRefreshing = false
         }
     }
 

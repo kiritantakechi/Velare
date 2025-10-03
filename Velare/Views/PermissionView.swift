@@ -49,14 +49,12 @@ struct PermissionView: View {
                         .padding(.horizontal)
                         .padding(.bottom, 20)
                 }
-                
+
                 Spacer()
             }
             .padding()
-            // 当应用从后台回到前台时（例如从系统设置回来），重新检查权限
-            .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
-                viewModel.checkPermissions()
-            }
+            .onAppear { viewModel.onAppear() }
+            .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in viewModel.checkPermissions() }
         }
     }
 
