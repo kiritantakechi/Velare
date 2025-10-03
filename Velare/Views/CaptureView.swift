@@ -71,6 +71,7 @@ struct CaptureView: View {
                 }
             }
             .animation(.easeInOut, value: viewModel.isCapturing)
+            .onAppear { viewModel.onAppear() }
         }
     }
 }

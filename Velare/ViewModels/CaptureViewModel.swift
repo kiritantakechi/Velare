@@ -39,21 +39,23 @@ final class CaptureViewModel {
         self.coordinator = coordinator
         self.captureService = coordinator.captureService
         self.windowDiscoveryService = coordinator.windowDiscoveryService
+    }
 
+    func onAppear() {
         guard !isCapturing else { return }
 
         refreshWindows()
     }
-    
+
     func startCapture() {
         guard let window = selectedWindow else { return }
+        
         captureService.startCapture(for: window)
     }
-    
+
     func stopCapture() {
         captureService.stopCapture()
     }
-    
 
     func refreshWindows(interval: TimeInterval = 0.1) {
         guard !isRefreshing else { return }

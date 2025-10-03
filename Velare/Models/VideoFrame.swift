@@ -8,7 +8,7 @@
 import CoreMedia
 import Metal
 
-struct VideoFrame: @unchecked Sendable {
+struct VideoFrame: Sendable {
     var texture: any MTLTexture // 直接使用 Metal 纹理，效率最高
     let timestamp: CMTime
 

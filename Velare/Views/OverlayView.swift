@@ -22,7 +22,8 @@ struct OverlayView: View {
                 .background(WindowAccessor(callback: viewModel.setWindow))
         }
         else {
-            Color.clear
+            // FFFFFUCK SHIT CODE
+            EmptyView()
                 .ignoresSafeArea()
                 .background(WindowAccessor(callback: viewModel.setWindow))
         }
