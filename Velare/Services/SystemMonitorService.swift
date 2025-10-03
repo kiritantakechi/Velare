@@ -14,6 +14,8 @@ final class SystemMonitorService {
 
     private var monitoringTask: Task<Void, Never>?
     private var previousCpuLoadInfo: host_cpu_load_info?
+    
+    init() {}
 
     func startMonitoring(interval: TimeInterval = 1.0) {
         // 防止重复启动

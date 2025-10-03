@@ -13,6 +13,8 @@ final class WindowDiscoveryService {
     private(set) var availableWindows: [SCWindow] = []
     private(set) var selectedWindow: SCWindow?
     private(set) var selectedWindowID: CGWindowID?
+    
+    init() {}
 
     func refreshAvailableContent() async {
         do {

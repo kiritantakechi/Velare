@@ -9,19 +9,23 @@ import SwiftUI
 
 @Observable
 final class ProcessingService {
+    private let settingService: SettingService
+    
     private var processors: [any FrameProcessor] = []
 
     // 在运行时根据设置来构建处理队列
-    init(setting: SettingService) {
-        if setting.isSdrToHdrConversionEnabled {
+    init(SettingService: SettingService) {
+        self.settingService = SettingService
+        
+        if settingService.isSdrToHdrConversionEnabled {
             // 假设一个 SDRtoHDRProcessor
             // processors.append(SDRtoHDRProcessor(model: setting.hdrConversionModel))
         }
-        if setting.isMetalFXUpscalingEnabled {
+        if settingService.isMetalFXUpscalingEnabled {
             // 假设一个 MetalFXUpscalingProcessor
             // processors.append(MetalFXUpscalingProcessor(mode: setting.upscalingMode))
         }
-        if setting.isMetalFXFrameInterpolationEnabled {
+        if settingService.isMetalFXFrameInterpolationEnabled {
             // 假设一个 FrameInterpolationProcessor
             // processors.append(FrameInterpolationProcessor())
         }

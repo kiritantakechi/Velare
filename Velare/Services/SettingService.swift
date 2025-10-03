@@ -65,18 +65,6 @@ enum HdrConversionModel: String, CaseIterable, Hashable, Identifiable, Sendable 
 
 @Observable
 final class SettingService {
-    private enum Keys {
-        private static let prefix = "com.touhouasia.Velare"
-
-        static let appLanguage = "\(prefix).appLanguage"
-        static let inputFramerate = "\(prefix).inputFramerate"
-        static let isMetalFXUpscalingEnabled = "\(prefix).isMetalFXUpscalingEnabled"
-        static let upscalingMode = "\(prefix).upscalingMode"
-        static let isMetalFXFrameInterpolationEnabled = "\(prefix).isMetalFXFrameInterpolationEnabled"
-        static let isSdrToHdrConversionEnabled = "\(prefix).isSdrToHdrConversionEnabled"
-        static let hdrConversionModel = "\(prefix).hdrConversionModel"
-    }
-
     var appLanguage: AppLanguage {
         didSet {
             UserDefaults.standard.setValue(appLanguage.rawValue, forKey: Keys.appLanguage)
@@ -148,5 +136,17 @@ final class SettingService {
         self.isMetalFXFrameInterpolationEnabled = UserDefaults.standard.bool(forKey: Keys.isMetalFXFrameInterpolationEnabled)
         self.isSdrToHdrConversionEnabled = UserDefaults.standard.bool(forKey: Keys.isSdrToHdrConversionEnabled)
         self.hdrConversionModel = UserDefaults.standard.string(forKey: Keys.hdrConversionModel).flatMap(HdrConversionModel.init) ?? .animeHdr
+    }
+    
+    private enum Keys {
+        private static let prefix = "com.touhouasia.Velare"
+
+        static let appLanguage = "\(prefix).appLanguage"
+        static let inputFramerate = "\(prefix).inputFramerate"
+        static let isMetalFXUpscalingEnabled = "\(prefix).isMetalFXUpscalingEnabled"
+        static let upscalingMode = "\(prefix).upscalingMode"
+        static let isMetalFXFrameInterpolationEnabled = "\(prefix).isMetalFXFrameInterpolationEnabled"
+        static let isSdrToHdrConversionEnabled = "\(prefix).isSdrToHdrConversionEnabled"
+        static let hdrConversionModel = "\(prefix).hdrConversionModel"
     }
 }
