@@ -20,5 +20,11 @@ struct WindowAccessor: NSViewRepresentable, Sendable {
         return view
     }
 
-    func updateNSView(_ nsView: NSView, context: Context) {}
+    func updateNSView(_ nsView: NSView, context: Context) {
+        DispatchQueue.main.async {
+            if let window = unsafe nsView.window {
+                self.callback(window)
+            }
+        }
+    }
 }

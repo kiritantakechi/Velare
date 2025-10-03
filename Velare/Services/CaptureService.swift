@@ -95,17 +95,18 @@ final class CaptureService: NSObject {
             throw NSError(domain: "CaptureService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Could not find window frame."])
         }
 
-        config.width = Int(liveFrame.width * 2)
-        config.height = Int(liveFrame.height * 2)
+        config.width = Int(liveFrame.width) << 1
+        config.height = Int(liveFrame.height) << 1
         config.minimumFrameInterval = CMTime(value: 1, timescale: CMTimeScale(settingService.inputFramerate))
         config.pixelFormat = kCVPixelFormatType_32BGRA
+        config.queueDepth = settingService.inputFramerate >> 2
 
         // 1. Create the AsyncStream and its continuation.
         let (stream, continuation) = AsyncStream.makeStream(of: CMSampleBuffer.self)
-        self.frameStream = stream
+        frameStream = stream
 
         // 2. Create the dedicated stream output handler.
-        self.streamOutputHandler = StreamOutputHandler(continuation: continuation)
+        streamOutputHandler = StreamOutputHandler(continuation: continuation)
 
         // 3. Set up the SCStream.
         scStream = SCStream(filter: filter, configuration: config, delegate: nil)
@@ -137,7 +138,8 @@ private final class StreamOutputHandler: NSObject, SCStreamOutput {
               let attachments = attachmentsArray.first,
               let statusRawValue = attachments[SCStreamFrameInfo.status] as? Int,
               let status = SCFrameStatus(rawValue: statusRawValue),
-              status == .complete else {
+              status == .complete
+        else {
             return
         }
 

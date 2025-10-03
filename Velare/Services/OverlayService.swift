@@ -29,6 +29,8 @@ final class OverlayService {
     }
 
     func setWindow(_ window: NSWindow) {
+        guard window !== overlayWindow else { return }
+        
         overlayWindow = window
         configureWindow()
     }

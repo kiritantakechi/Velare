@@ -54,14 +54,15 @@ struct CaptureView: View {
                     .disabled(viewModel.isRefreshing || viewModel.isCapturing)
 
                     Button(action: {
-                        if viewModel.isCapturing {
-                            // 如果正在捕获，就停止并关闭窗口
-                            viewModel.toggleCapture()
-                            dismissWindow(id: "overlay-window")
-                        } else {
+                        openWindow(id: "overlay-window")
+                        if !viewModel.isCapturing {
                             // 如果尚未捕获，就打开窗口并开始
-                            viewModel.toggleCapture()
-                            openWindow(id: "overlay-window")
+                            viewModel.startCapture()
+                            // openWindow(id: "overlay-window")
+                        } else {
+                            // 如果正在捕获，就停止并关闭窗口
+                            viewModel.stopCapture()
+                            // dismissWindow(id: "overlay-window")
                         }
                     }) {
                         Image(systemName: viewModel.isCapturing ? "stop.circle.fill" : "play.circle.fill")
