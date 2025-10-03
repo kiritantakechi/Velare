@@ -9,8 +9,8 @@ import SwiftUI
 
 @Observable
 final class CoordinatorViewModel {
-    private let coordinator: AppCoordinator
-    private let settingService: SettingService
+    private unowned let coordinator: AppCoordinator
+    private unowned let settingService: SettingService
 
     var selectedRoute: AppRoute? { get { coordinator.selectedRoute } set { coordinator.selectedRoute = newValue }}
     
@@ -23,7 +23,7 @@ final class CoordinatorViewModel {
         self.settingService = coordinator.settingService
     }
     
-    func start() {
+    func onAppear() {
         Task { await coordinator.start() }
     }
     

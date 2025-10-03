@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "app.view.mainWindow.title" : {
+
+    },
     "app.view.overlayWindow.title" : {
       "localizations" : {
         "en" : {

@@ -9,11 +9,9 @@ import SwiftUI
 
 @Observable
 final class OverlayViewModel {
-    private let coordinator: AppCoordinator
-
-    private let overlayService: OverlayService
-
-    let cacheService: CacheService
+    private unowned let coordinator: AppCoordinator
+    private unowned let overlayService: OverlayService
+    unowned let cacheService: CacheService
 
     var texture: (any MTLTexture)? {
         overlayService.texture

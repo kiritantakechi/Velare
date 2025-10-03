@@ -9,8 +9,8 @@ import SwiftUI
 
 @Observable
 final class SettingViewModel {
-    private let coordinator: AppCoordinator
-    private let settingService: SettingService
+    private unowned let coordinator: AppCoordinator
+    private unowned let settingService: SettingService
     
     var appLanguage: AppLanguage {
         get { settingService.appLanguage }

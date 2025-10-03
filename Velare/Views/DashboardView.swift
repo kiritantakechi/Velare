@@ -88,7 +88,7 @@ struct MetricCard<Content: View>: View {
             content
         }
         .padding()
-        .background(.background.opacity(0.5)) // 半透明背景
+        .background(.background.opacity(0.5))
         .cornerRadius(12)
         .overlay(
             RoundedRectangle(cornerRadius: 12)

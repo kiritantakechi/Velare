@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		39DDEB792E9034AC00D92EDD /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 39DDEB782E9034AC00D92EDD /* AsyncAlgorithms */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		397808A42E883BF5007F98C0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39DDEB792E9034AC00D92EDD /* AsyncAlgorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = Velare;
 			packageProductDependencies = (
+				39DDEB782E9034AC00D92EDD /* AsyncAlgorithms */,
 			);
 			productName = Velare;
 			productReference = 397808962E883BF4007F98C0 /* Velare.app */;
@@ -204,6 +210,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				3978096C2E8AA03F007F98C0 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
+				39DDEB772E9034AC00D92EDD /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 397808972E883BF4007F98C0 /* Products */;
@@ -630,7 +637,23 @@
 				minimumVersion = 1.2.1;
 			};
 		};
+		39DDEB772E9034AC00D92EDD /* XCRemoteSwiftPackageReference "swift-async-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-async-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.4;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		39DDEB782E9034AC00D92EDD /* AsyncAlgorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39DDEB772E9034AC00D92EDD /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
+			productName = AsyncAlgorithms;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3978088E2E883BF4007F98C0 /* Project object */;
 }

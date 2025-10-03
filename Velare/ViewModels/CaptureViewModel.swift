@@ -10,9 +10,9 @@ internal import ScreenCaptureKit
 
 @Observable
 final class CaptureViewModel {
-    private let coordinator: AppCoordinator
-    private let captureService: CaptureService
-    private let windowDiscoveryService: WindowDiscoveryService
+    private unowned let coordinator: AppCoordinator
+    private unowned let captureService: CaptureService
+    private unowned let windowDiscoveryService: WindowDiscoveryService
 
     var availableWindows: [SCWindow] { windowDiscoveryService.availableWindows }
 
@@ -49,7 +49,7 @@ final class CaptureViewModel {
 
     func startCapture() {
         guard let window = selectedWindow else { return }
-        
+
         captureService.startCapture(for: window)
     }
 

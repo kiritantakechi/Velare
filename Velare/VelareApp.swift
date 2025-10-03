@@ -12,7 +12,7 @@ struct VelareApp: App {
     @State private var coordinator = AppCoordinator()
 
     var body: some Scene {
-        WindowGroup {
+        WindowGroup("app.view.mainWindow.title", id: "main-window") {
             let coordinatorViewModel = CoordinatorViewModel(coordinator: coordinator)
 
             CoordinatorView(viewModel: coordinatorViewModel)
@@ -23,8 +23,8 @@ struct VelareApp: App {
 
             OverlayView(viewModel: overlayViewModel)
         }
-        .windowStyle(.hiddenTitleBar) // 隐藏标题栏
-        .windowResizability(.contentSize) // 窗口大小由内容决定
+        .windowStyle(.hiddenTitleBar)
+        .windowResizability(.contentSize)
         .defaultPosition(.center)
     }
 }

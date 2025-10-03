@@ -9,8 +9,8 @@ import SwiftUI
 
 @Observable
 final class DashboardViewModel {
-    private let coordinator: AppCoordinator
-    private let monitorService: SystemMonitorService
+    private unowned let coordinator: AppCoordinator
+    private unowned let monitorService: SystemMonitorService
 
     var cpuUsage: Double {
         monitorService.currentCPUUsage

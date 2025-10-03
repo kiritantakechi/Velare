@@ -9,8 +9,8 @@ import SwiftUI
 
 @Observable
 final class PermissionViewModel {
-    private let coordinator: AppCoordinator
-    private let permissionService: PermissionService
+    private unowned let coordinator: AppCoordinator
+    private unowned let permissionService: PermissionService
     
     var screenCapturePermissionStatus: PermissionStatus { permissionService.screenCapturePermissionStatus }
     
