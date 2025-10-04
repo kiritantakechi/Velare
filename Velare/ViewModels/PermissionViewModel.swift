@@ -10,14 +10,18 @@ import SwiftUI
 @Observable
 final class PermissionViewModel {
     private unowned let coordinator: AppCoordinator
+
     private unowned let permissionService: PermissionService
     
+    var accessibilityPermissionStatus: PermissionStatus { permissionService.accessibilityPermissionStatus }
     var screenCapturePermissionStatus: PermissionStatus { permissionService.screenCapturePermissionStatus }
     
+    var isAccessibilityPermissionGranted: Bool { permissionService.isAccessibilityPermissionGranted }
     var isScreenCapturePermissionGranted: Bool { permissionService.isScreenCapturePermissionGranted }
     
     init(coordinator: consuming AppCoordinator) {
         self.permissionService = coordinator.permissionService
+
         self.coordinator = consume coordinator
     }
     
@@ -30,10 +34,20 @@ final class PermissionViewModel {
         permissionService.checkPermissions()
     }
     
-    func requestScreenCapturePermission() {
-        _ = permissionService.requestScreenCapturePermission()
+    func requestAccessibilityPermission() {
+        defer { checkPermissions() }
         
-        checkPermissions()
+        guard permissionService.requestAccessibilityPermission() else { return }
+    }
+    
+    func requestScreenCapturePermission() {
+        defer { checkPermissions() }
+        
+        guard permissionService.requestScreenCapturePermission() else { return }
+    }
+    
+    func openSystemSettingsForAccessibility() {
+        permissionService.openSystemSettingsForAccessibility()
     }
     
     func openSystemSettingsForScreenCapture() {

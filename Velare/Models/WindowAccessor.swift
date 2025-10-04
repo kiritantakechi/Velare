@@ -10,7 +10,7 @@ import SwiftUI
 struct WindowAccessor: NSViewRepresentable, Sendable {
     var callback: (NSWindow) -> Void
 
-    func makeNSView(context: Context) -> NSView {
+    func makeNSView(context: consuming Context) -> NSView {
         let view = NSView()
         DispatchQueue.main.async {
             if let window = unsafe view.window {
@@ -20,11 +20,11 @@ struct WindowAccessor: NSViewRepresentable, Sendable {
         return view
     }
 
-    func updateNSView(_ nsView: NSView, context: Context) {
-        DispatchQueue.main.async {
-            if let window = unsafe nsView.window {
-                self.callback(window)
-            }
-        }
+    func updateNSView(_ nsView: consuming NSView, context: consuming Context) {
+//        DispatchQueue.main.async {
+//            if let window = unsafe nsView.window {
+//                self.callback(window)
+//            }
+//        }
     }
 }

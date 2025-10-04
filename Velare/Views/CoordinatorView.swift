@@ -10,7 +10,7 @@ import SwiftUI
 
 struct CoordinatorView: View {
     @State private var viewModel: CoordinatorViewModel
-    
+
     @Environment(\.openWindow) private var openWindow
     @Environment(\.dismissWindow) private var dismissWindow
 
@@ -59,6 +59,13 @@ struct CoordinatorView: View {
             .frame(minWidth: 600, minHeight: 400)
             .environment(\.locale, viewModel.activeLocale)
             .onAppear { viewModel.onAppear() }
+            .onChange(of: viewModel.isCapturing) { _, isCapturing in
+                if isCapturing {
+                    openWindow(id: "overlay-window")
+                } else {
+                    dismissWindow(id: "overlay-window")
+                }
+            }
         }
     }
 }

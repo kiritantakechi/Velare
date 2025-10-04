@@ -10,15 +10,20 @@ import SwiftUI
 @Observable
 final class CoordinatorViewModel {
     private unowned let coordinator: AppCoordinator
+
+    private unowned let captureService: CaptureService
     private unowned let settingService: SettingService
 
     var activeLocale: Locale { settingService.activeLocale }
     var selectedRoute: AppRoute? { get { coordinator.selectedRoute } set { coordinator.selectedRoute = newValue }}
     
+    var isCapturing: Bool { captureService.isCapturing }
     var isLoading: Bool { coordinator.isLoading }
     
     init(coordinator: consuming AppCoordinator) {
+        self.captureService = coordinator.captureService
         self.settingService = coordinator.settingService
+
         self.coordinator = consume coordinator
     }
     

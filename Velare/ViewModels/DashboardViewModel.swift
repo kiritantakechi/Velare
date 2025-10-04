@@ -10,6 +10,7 @@ import SwiftUI
 @Observable
 final class DashboardViewModel {
     private unowned let coordinator: AppCoordinator
+
     private unowned let monitorService: SystemMonitorService
 
     var cpuUsage: Double {
@@ -30,6 +31,7 @@ final class DashboardViewModel {
 
     init(coordinator: consuming AppCoordinator) {
         self.monitorService = coordinator.systemMonitorService
+
         self.coordinator = consume coordinator
     }
 

@@ -10,6 +10,7 @@ import SwiftUI
 @Observable
 final class OverlayViewModel {
     private unowned let coordinator: AppCoordinator
+
     private unowned let overlayService: OverlayService
     unowned let cacheService: CacheService
 
@@ -18,6 +19,7 @@ final class OverlayViewModel {
     init(coordinator: consuming AppCoordinator) {
         self.cacheService = coordinator.cacheService
         self.overlayService = coordinator.overlayService
+
         self.coordinator = consume coordinator
     }
 

@@ -11,6 +11,7 @@ internal import ScreenCaptureKit
 @Observable
 final class CaptureViewModel {
     private unowned let coordinator: AppCoordinator
+
     private unowned let captureService: CaptureService
     private unowned let windowDiscoveryService: WindowDiscoveryService
 
@@ -34,6 +35,7 @@ final class CaptureViewModel {
     init(coordinator: consuming AppCoordinator) {
         self.captureService = coordinator.captureService
         self.windowDiscoveryService = coordinator.windowDiscoveryService
+
         self.coordinator = consume coordinator
     }
 

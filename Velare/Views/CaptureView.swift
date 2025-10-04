@@ -11,9 +11,6 @@ internal import ScreenCaptureKit
 struct CaptureView: View {
     @State private var viewModel: CaptureViewModel
 
-    @Environment(\.openWindow) private var openWindow
-    @Environment(\.dismissWindow) private var dismissWindow
-
     init(viewModel: CaptureViewModel) {
         self.viewModel = viewModel
     }
@@ -55,12 +52,8 @@ struct CaptureView: View {
 
                     Button(action: {
                         if !viewModel.isCapturing {
-                            // 如果尚未捕获，就打开窗口并开始
-                            openWindow(id: "overlay-window")
                             viewModel.startCapture()
                         } else {
-                            // 如果正在捕获，就停止并关闭窗口
-                            dismissWindow(id: "overlay-window")
                             viewModel.stopCapture()
                         }
                     }) {

@@ -5,7 +5,7 @@
 //  Created by Kiritan on 2025/09/29.
 //
 
-import Foundation
+import Darwin
 
 struct MemoryUsage: Hashable, Sendable {
     let used: Double

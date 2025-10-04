@@ -10,6 +10,7 @@ import SwiftUI
 @Observable
 final class SettingViewModel {
     private unowned let coordinator: AppCoordinator
+
     private unowned let settingService: SettingService
     
     var appLanguage: AppLanguage {
@@ -49,6 +50,7 @@ final class SettingViewModel {
     
     init(coordinator: consuming AppCoordinator) {
         self.settingService = coordinator.settingService
+
         self.coordinator = consume coordinator
     }
 }
