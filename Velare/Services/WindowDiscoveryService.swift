@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-internal import ScreenCaptureKit
+@unsafe @preconcurrency internal import ScreenCaptureKit
 
 @Observable
 final class WindowDiscoveryService {
