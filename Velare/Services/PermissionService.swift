@@ -5,6 +5,7 @@
 //  Created by Kiritan on 2025/09/29.
 //
 
+import ApplicationServices
 import SwiftUI
 
 enum PermissionStatus: String, Hashable, Sendable {
@@ -55,8 +56,8 @@ final class PermissionService {
     }
 
     func requestAccessibilityPermission() -> Bool {
-        let options = unsafe [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
-        return AXIsProcessTrustedWithOptions(options as CFDictionary)
+        let options = unsafe [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
+        return AXIsProcessTrustedWithOptions(options)
     }
 
     func requestScreenCapturePermission() -> Bool {

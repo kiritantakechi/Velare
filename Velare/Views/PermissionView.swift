@@ -16,78 +16,144 @@ struct PermissionView: View {
 
     var body: some View {
         GlassEffectContainer {
-            VStack(spacing: 20) {
-                Spacer()
-
-                Image(systemName: "hand.raised.square.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 80, height: 80)
-                    .foregroundStyle(Color.accentColor)
-                    .padding(.bottom, 10)
-
-                Text("permission.view.title")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-
-                Text("permission.view.description")
-                    .font(.body)
-                    .multilineTextAlignment(.center)
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal)
-
-                Spacer()
-
-                // 主操作按钮
-                mainActionButton
-                    .padding(.horizontal)
-                    .padding(.bottom, 10)
-
-                // 辅助操作：仅在用户已明确拒绝权限后显示
-                if viewModel.isScreenCapturePermissionGranted == false {
-                    secondaryActionButton
-                        .padding(.horizontal)
-                        .padding(.bottom, 20)
+            VStack(spacing: 0) {
+                // 1. Header
+                VStack {
+                    Image(systemName: "lock.shield.fill")
+                        .font(.system(size: 40))
+                        .foregroundStyle(Color.accentColor)
+                    
+                    Text("permission.view.title")
+                        .font(.largeTitle.bold())
+                        .padding(.top, 10)
+                    
+                    Text("permission.view.description")
+                        .font(.headline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: 400)
                 }
-
-                Spacer()
+                .padding(50)
+                
+                Divider()
+                
+                // 2. Permission Checklist
+                VStack(spacing: 20) {
+                    PermissionRow(viewModel: viewModel, type: .screenCapture)
+                    PermissionRow(viewModel: viewModel, type: .accessibility)
+                }
+                .padding(30)
+                
+                Divider()
+                
+                // 3. Footer Action
+                HStack {
+                    Spacer()
+                    Button(action: viewModel.permissionsGranted) {
+                        Label("permission.view.button.continue", systemImage: "arrow.right.circle.fill")
+                    }
+                    .controlSize(.large)
+                    .buttonStyle(.borderedProminent)
+                    .disabled(!viewModel.isScreenCapturePermissionGranted || !viewModel.isAccessibilityPermissionGranted)
+                }
+                .padding(20)
             }
-            .padding()
-            .onAppear { viewModel.onAppear() }
-            .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in viewModel.checkPermissions() }
+        }
+        .onAppear(perform: viewModel.onAppear)
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+            viewModel.checkPermissions()
         }
     }
+}
 
-    @ViewBuilder
-    private var mainActionButton: some View {
-        if viewModel.isScreenCapturePermissionGranted {
-            // --- 状态：已授权 ---
-            Button(action: {
-                viewModel.permissionsGranted()
-            }) {
-                Label("permission.view.button.granted", systemImage: "checkmark.circle.fill")
-            }
-            .controlSize(.large)
-            .buttonStyle(.borderedProminent)
-            .tint(.green)
-        } else {
-            // --- 状态：未授权 (可能是初次，也可能是已拒绝) ---
-            Button(action: {
-                // 点击后会触发系统弹窗
-                viewModel.requestScreenCapturePermission()
-            }) {
-                Label("permission.view.button.grant", systemImage: "lock.shield.fill")
-            }
-            .controlSize(.large)
-            .buttonStyle(.borderedProminent)
+// Enum to represent the two types of permissions
+private enum PermissionType {
+    case screenCapture
+    case accessibility
+}
+
+// A reusable view for a single permission item in the checklist
+private struct PermissionRow: View {
+    let viewModel: PermissionViewModel
+    let type: PermissionType
+    
+    private var status: PermissionStatus {
+        switch type {
+        case .screenCapture: return viewModel.screenCapturePermissionStatus
+        case .accessibility: return viewModel.accessibilityPermissionStatus
         }
     }
-
-    @ViewBuilder
-    private var secondaryActionButton: some View {
-        Button("permission.view.button.openSetting") {
-            viewModel.openSystemSettingsForScreenCapture()
+    
+    private var title: LocalizedStringKey {
+        switch type {
+        case .screenCapture: return "permission.view.screenCapture.title"
+        case .accessibility: return "permission.view.accessibility.title"
         }
-        .buttonStyle(.link)
+    }
+    
+    private var subtitle: LocalizedStringKey {
+        switch type {
+        case .screenCapture: return "permission.view.screenCapture.subtitle"
+        case .accessibility: return "permission.view.accessibility.subtitle"
+        }
+    }
+    
+    var body: some View {
+        HStack(spacing: 15) {
+            // Icon
+            Image(systemName: status == .granted ? "checkmark.circle.fill" : "xmark.circle.fill")
+                .font(.largeTitle)
+                .foregroundStyle(status == .granted ? .green : .secondary)
+                .frame(width: 30)
+            
+            // Text
+            VStack(alignment: .leading) {
+                Text(title)
+                    .font(.headline)
+                Text(subtitle)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            
+            Spacer()
+            
+            // Action Button
+            actionButton
+        }
+    }
+    
+    @ViewBuilder
+    private var actionButton: some View {
+        switch status {
+        case .granted:
+            Text("permission.view.status.granted")
+                .foregroundStyle(.green)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(Color.green.opacity(0.1))
+                .cornerRadius(8)
+            
+        case .unknown:
+            Button("permission.view.status.grant") { requestPermission() }
+                .buttonStyle(.borderedProminent)
+            
+        case .denied:
+            Button("permission.view.button.openSetting") { requestPermission(); openSettings() }
+                .buttonStyle(.bordered)
+        }
+    }
+    
+    private func requestPermission() {
+        switch type {
+        case .screenCapture: viewModel.requestScreenCapturePermission()
+        case .accessibility: viewModel.requestAccessibilityPermission()
+        }
+    }
+    
+    private func openSettings() {
+        switch type {
+        case .screenCapture: viewModel.openSystemSettingsForScreenCapture()
+        case .accessibility: viewModel.openSystemSettingsForAccessibility()
+        }
     }
 }

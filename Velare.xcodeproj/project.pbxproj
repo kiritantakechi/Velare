@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		39DDEB792E9034AC00D92EDD /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 39DDEB782E9034AC00D92EDD /* AsyncAlgorithms */; };
+		39DDEB7E2E91ACA800D92EDD /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 39DDEB7D2E91ACA800D92EDD /* Algorithms */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,9 +34,22 @@
 		397808AD2E883BF6007F98C0 /* VelareUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VelareUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		39DDEB802E91ACB200D92EDD /* Exceptions for "Velare" folder in "Velare" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 397808952E883BF4007F98C0 /* Velare */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		397808982E883BF4007F98C0 /* Velare */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				39DDEB802E91ACB200D92EDD /* Exceptions for "Velare" folder in "Velare" target */,
+			);
 			path = Velare;
 			sourceTree = "<group>";
 		};
@@ -56,6 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39DDEB7E2E91ACA800D92EDD /* Algorithms in Frameworks */,
 				39DDEB792E9034AC00D92EDD /* AsyncAlgorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -83,6 +98,7 @@
 				397808982E883BF4007F98C0 /* Velare */,
 				397808A62E883BF5007F98C0 /* VelareTests */,
 				397808B02E883BF6007F98C0 /* VelareUITests */,
+				39DDEB7C2E91ACA800D92EDD /* Frameworks */,
 				397808972E883BF4007F98C0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -95,6 +111,13 @@
 				397808AD2E883BF6007F98C0 /* VelareUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		39DDEB7C2E91ACA800D92EDD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -118,6 +141,7 @@
 			name = Velare;
 			packageProductDependencies = (
 				39DDEB782E9034AC00D92EDD /* AsyncAlgorithms */,
+				39DDEB7D2E91ACA800D92EDD /* Algorithms */,
 			);
 			productName = Velare;
 			productReference = 397808962E883BF4007F98C0 /* Velare.app */;
@@ -444,6 +468,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -453,6 +478,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Velare/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Velare;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -478,6 +504,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -487,6 +514,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Velare/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Velare;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -652,6 +680,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 39DDEB772E9034AC00D92EDD /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
 			productName = AsyncAlgorithms;
+		};
+		39DDEB7D2E91ACA800D92EDD /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3978096C2E8AA03F007F98C0 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
