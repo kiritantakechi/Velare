@@ -55,8 +55,10 @@ final class PermissionService {
         }
     }
 
+    // 缓解修复
     func requestAccessibilityPermission() -> Bool {
-        let options = unsafe [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
+        let promptKey = "AXTrustedCheckOptionPrompt" as CFString
+        let options: CFDictionary = [promptKey: true] as CFDictionary
         return AXIsProcessTrustedWithOptions(options)
     }
 

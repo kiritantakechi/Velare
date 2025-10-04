@@ -9,6 +9,8 @@ import SwiftUI
 
 @Observable
 final class SystemMonitorService {
+    private let pageSize: Int32 = getpagesize()
+
     private(set) var currentCPUUsage: Double = 0.0
     private(set) var currentMemoryUsage: MemoryUsage = .init(used: 0, total: 0)
 
@@ -62,7 +64,7 @@ final class SystemMonitorService {
         let totalMemory = Double(ProcessInfo.processInfo.physicalMemory) * gbFactor
 
         let counts = UInt64(stats.wire_count) + UInt64(stats.active_count)
-        let usedMemory = Double(counts * UInt64(vm_kernel_page_size)) * gbFactor
+        let usedMemory = Double(counts * UInt64(pageSize)) * gbFactor
 
         currentMemoryUsage = MemoryUsage(used: usedMemory, total: totalMemory)
     }
