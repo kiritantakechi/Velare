@@ -17,9 +17,9 @@ final class CoordinatorViewModel {
     
     var isLoading: Bool { coordinator.isLoading }
     
-    init(coordinator: AppCoordinator) {
-        self.coordinator = coordinator
+    init(coordinator: consuming AppCoordinator) {
         self.settingService = coordinator.settingService
+        self.coordinator = consume coordinator
     }
     
     func onAppear() {

@@ -16,9 +16,9 @@ final class PermissionViewModel {
     
     var isScreenCapturePermissionGranted: Bool { permissionService.isScreenCapturePermissionGranted }
     
-    init(coordinator: AppCoordinator) {
-        self.coordinator = coordinator
+    init(coordinator: consuming AppCoordinator) {
         self.permissionService = coordinator.permissionService
+        self.coordinator = consume coordinator
     }
     
     func onAppear() {

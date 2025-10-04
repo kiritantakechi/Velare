@@ -22,8 +22,10 @@ final class PermissionService {
     var isScreenCapturePermissionGranted: Bool {
         screenCapturePermissionStatus == .granted
     }
-    
-    init() {}
+
+    init() {
+        checkPermissions()
+    }
 
     func checkPermissions() {
         // 这里不请求，只检查

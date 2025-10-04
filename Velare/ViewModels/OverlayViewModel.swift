@@ -13,21 +13,15 @@ final class OverlayViewModel {
     private unowned let overlayService: OverlayService
     unowned let cacheService: CacheService
 
-    var texture: (any MTLTexture)? {
-        overlayService.texture
-    }
+    var texture: (any MTLTexture)? { overlayService.texture }
 
-    init(coordinator: AppCoordinator) {
-        self.coordinator = coordinator
+    init(coordinator: consuming AppCoordinator) {
         self.cacheService = coordinator.cacheService
         self.overlayService = coordinator.overlayService
-    }
-    
-    func onAppear() {
-        
+        self.coordinator = consume coordinator
     }
 
-    func setWindow(_ window: NSWindow) {
-        overlayService.setWindow(window)
+    func setWindow(_ window: consuming NSWindow) {
+        overlayService.setWindow(consume window)
     }
 }

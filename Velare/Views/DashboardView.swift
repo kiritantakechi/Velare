@@ -24,12 +24,8 @@ struct DashboardView: View {
                 .padding()
             }
         }
-        .onAppear {
-            viewModel.startMonitoring()
-        }
-        .onDisappear {
-            viewModel.stopMonitoring()
-        }
+        .onAppear { viewModel.onAppear() }
+        .onDisappear { viewModel.onDisappear() }
     }
 
     private var cpuCard: some View {

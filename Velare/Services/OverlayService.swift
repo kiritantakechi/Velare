@@ -24,14 +24,14 @@ final class OverlayService {
     }
 
     func update(texture: consuming any MTLTexture) {
-        self.texture = texture
+        self.texture = consume texture
         print("🔄 [OverlayService] 纹理已更新")
     }
 
-    func setWindow(_ window: NSWindow) {
+    func setWindow(_ window: consuming NSWindow) {
         guard window !== overlayWindow else { return }
         
-        overlayWindow = window
+        overlayWindow = consume window
         configureWindow()
     }
 

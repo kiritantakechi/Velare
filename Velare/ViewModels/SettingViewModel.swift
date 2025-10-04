@@ -47,12 +47,8 @@ final class SettingViewModel {
         set { settingService.hdrConversionModel = newValue }
     }
     
-    init(coordinator: AppCoordinator) {
-        self.coordinator = coordinator
+    init(coordinator: consuming AppCoordinator) {
         self.settingService = coordinator.settingService
-    }
-    
-    func onAppear() {
-        
+        self.coordinator = consume coordinator
     }
 }

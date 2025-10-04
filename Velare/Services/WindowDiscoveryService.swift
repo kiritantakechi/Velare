@@ -12,7 +12,6 @@ internal import ScreenCaptureKit
 final class WindowDiscoveryService {
     private(set) var availableWindows: [SCWindow] = []
     private(set) var selectedWindow: SCWindow?
-    private(set) var selectedWindowID: CGWindowID?
 
     private(set) var isRefreshing: Bool = false
 
@@ -74,12 +73,10 @@ final class WindowDiscoveryService {
 
     func selectWindow(by windowID: CGWindowID) {
         selectedWindow = availableWindows.first { $0.windowID == windowID }
-        selectedWindowID = selectedWindow?.windowID
     }
 
     func clearSelection() {
         selectedWindow = nil
-        selectedWindowID = nil
     }
 
     private func isValidWindow(_ window: SCWindow) -> Bool {

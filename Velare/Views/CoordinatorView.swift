@@ -10,6 +10,9 @@ import SwiftUI
 
 struct CoordinatorView: View {
     @State private var viewModel: CoordinatorViewModel
+    
+    @Environment(\.openWindow) private var openWindow
+    @Environment(\.dismissWindow) private var dismissWindow
 
     init(viewModel: CoordinatorViewModel) {
         self.viewModel = viewModel

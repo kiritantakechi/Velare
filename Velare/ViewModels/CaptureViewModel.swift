@@ -14,14 +14,11 @@ final class CaptureViewModel {
     private unowned let captureService: CaptureService
     private unowned let windowDiscoveryService: WindowDiscoveryService
 
+    // 等待 Swift 6.3 对 Span 类型指定生命周期的支持
     var availableWindows: [SCWindow] { windowDiscoveryService.availableWindows }
-
     var selectedWindow: SCWindow? { windowDiscoveryService.selectedWindow }
-
     var selectedWindowID: CGWindowID? {
-        get {
-            windowDiscoveryService.selectedWindowID
-        }
+        get { windowDiscoveryService.selectedWindow?.windowID }
         set {
             if let windowID = newValue {
                 windowDiscoveryService.selectWindow(by: windowID)
@@ -34,10 +31,10 @@ final class CaptureViewModel {
     var isCapturing: Bool { captureService.isCapturing }
     var isRefreshing: Bool { windowDiscoveryService.isRefreshing }
 
-    init(coordinator: AppCoordinator) {
-        self.coordinator = coordinator
+    init(coordinator: consuming AppCoordinator) {
         self.captureService = coordinator.captureService
         self.windowDiscoveryService = coordinator.windowDiscoveryService
+        self.coordinator = consume coordinator
     }
 
     func onAppear() {
@@ -61,7 +58,7 @@ final class CaptureViewModel {
             async let refreshTask: () = await windowDiscoveryService.refreshAvailableContent()
             async let sleepTask: () = (try? await Task.sleep(for: .seconds(interval))) ?? ()
 
-            _ = await (refreshTask, sleepTask)
+            return await (refreshTask, sleepTask)
         }
     }
 

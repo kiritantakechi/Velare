@@ -28,20 +28,16 @@ final class DashboardViewModel {
         unsafe String(format: "%.2f GB / %.2f GB", memoryUsage.used, memoryUsage.total)
     }
 
-    init(coordinator: AppCoordinator) {
-        self.coordinator = coordinator
+    init(coordinator: consuming AppCoordinator) {
         self.monitorService = coordinator.systemMonitorService
-    }
-    
-    func onAppear() {
-        
+        self.coordinator = consume coordinator
     }
 
-    func startMonitoring() {
+    func onAppear() {
         monitorService.startMonitoring()
     }
 
-    func stopMonitoring() {
+    func onDisappear() {
         monitorService.stopMonitoring()
     }
 }

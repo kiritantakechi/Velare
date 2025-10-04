@@ -71,8 +71,6 @@ final class AppCoordinator {
     }
 
     private func checkPermissions() async {
-        permissionService.checkPermissions()
-
         if permissionService.isScreenCapturePermissionGranted {
             permissionsGranted()
         }

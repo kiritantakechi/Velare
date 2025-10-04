@@ -10,13 +10,13 @@ import SwiftUI
 @Observable
 final class ProcessingService {
     private let settingService: SettingService
-    
+
     private var processors: [any FrameProcessor] = []
 
     // 在运行时根据设置来构建处理队列
     init(SettingService: SettingService) {
         self.settingService = SettingService
-        
+
         if settingService.isSdrToHdrConversionEnabled {
             // 假设一个 SDRtoHDRProcessor
             // processors.append(SDRtoHDRProcessor(model: setting.hdrConversionModel))
