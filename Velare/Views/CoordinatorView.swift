@@ -55,8 +55,8 @@ struct CoordinatorView: View {
                 }
             }
             .navigationTitle(LocalizedStringKey(viewModel.selectedRoute?.localizationKey ?? "coordinator.view.navigation.title"))
-            .navigationSplitViewColumnWidth(min: 160, ideal: 200)
-            .frame(minWidth: 600, minHeight: 480)
+            .navigationSplitViewColumnWidth(min: 200, ideal: 220)
+            .frame(minWidth: 600, minHeight: 400)
             .environment(\.locale, viewModel.activeLocale)
             .onAppear { viewModel.onAppear() }
         }
