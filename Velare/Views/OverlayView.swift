@@ -27,5 +27,10 @@ struct OverlayView: View {
                 .ignoresSafeArea()
                 .background(WindowAccessor(callback: viewModel.setWindow))
         }
+        
+        
+//        MetalView(gpuPool: viewModel.gpuPool, texture: viewModel.texture)
+//            .ignoresSafeArea()
+//            .background(WindowAccessor(callback: viewModel.setWindow))
     }
 }

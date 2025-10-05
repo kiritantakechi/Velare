@@ -61,7 +61,7 @@ final class AppCoordinator {
         windowDiscoveryService = WindowDiscoveryService()
         windowObserverService = WindowObserverService()
 
-        overlayService = OverlayService(windowDiscoveryService: windowDiscoveryService)
+        overlayService = OverlayService(windowDiscoveryService: windowDiscoveryService, windowObserverService: windowObserverService)
         processingService = ProcessingService(SettingService: settingService)
         captureService = CaptureService(gpuPool: gpuPool, overlayService: overlayService, processingService: processingService, settingService: settingService, windowDiscoveryService: windowDiscoveryService)
     }

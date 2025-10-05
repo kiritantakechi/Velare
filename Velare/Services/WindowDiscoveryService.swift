@@ -56,7 +56,7 @@ final class WindowDiscoveryService {
         // CoreGraphics 的坐标原点 (0,0) 在屏幕左上角
         // AppKit/SwiftUI 的坐标原点 (0,0) 在屏幕左下角
         // 我们需要将 y 坐标进行转换
-        guard let screen = NSScreen.main else { return frame } // 如果获取不到屏幕，返回原始 frame
+        guard let screen = NSScreen.screens.first(where: { NSMouseInRect(frame.origin, $0.frame, true) }) else { return CGRect.zero }
         let screenHeight = screen.frame.height
 
         let convertedFrame = CGRect(
@@ -99,5 +99,26 @@ final class WindowDiscoveryService {
         guard window.frame.width > 100, window.frame.height > 100 else { return false }
 
         return true
+    }
+}
+
+extension WindowDiscoveryService {
+    // 根据 NSWindow 获取对应的 CGWindowID
+    func windowID(for nsWindow: NSWindow) -> CGWindowID? {
+        let windowNumber = nsWindow.windowNumber
+
+        guard let windowListInfo = CGWindowListCopyWindowInfo([.optionOnScreenOnly, .excludeDesktopElements], kCGNullWindowID) as? [[String: AnyObject]] else {
+            return nil
+        }
+
+        for info in windowListInfo {
+            if let cgID = info[kCGWindowNumber as String] as? NSNumber,
+               cgID.intValue == windowNumber
+            {
+                return CGWindowID(cgID.uint32Value)
+            }
+        }
+
+        return nil
     }
 }

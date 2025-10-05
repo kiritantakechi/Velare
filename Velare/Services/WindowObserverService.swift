@@ -17,7 +17,13 @@ final class WindowObserverService {
     
     private var isObserving: Bool = false
 
-    init() {}
+    init() {
+        startObserve()
+    }
+    
+    deinit {
+        stopObserve()
+    }
     
     func startObserve() {
         guard !isObserving else { return }
@@ -119,7 +125,7 @@ final class WindowObserverService {
         if unsafe AXUIElementCopyAttributeValue(element, kAXWindowNumberAttribute, &value) == .success,
            let number = value as? NSNumber
         {
-            let windowID = CGWindowID(number.uint32Value)
+            windowID = CGWindowID(number.uint32Value)
             print("窗口 ID: \(windowID)")
         }
             

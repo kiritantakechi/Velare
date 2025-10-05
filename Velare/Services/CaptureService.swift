@@ -86,11 +86,12 @@ final class CaptureService: NSObject {
 
     func stopCapture() {
         // If not capturing, do nothing.
-        guard isCapturing else { return }
+        guard isCapturing, capturePipelineTask != nil else { return }
 
         // Cancel the main pipeline task.
         // The cleanup is handled within the Task's completion block.
         capturePipelineTask?.cancel()
+        capturePipelineTask = nil
     }
 
     private func startStream(for window: SCWindow) async throws {
