@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MetalView: NSViewRepresentable {
     let gpuPool: GPUPool
-    let texture: (any MTLTexture)?
+    @Binding var texture: (any MTLTexture)?
 
     func makeCoordinator() -> Coordinator {
         Coordinator(self, gpuPool: gpuPool)

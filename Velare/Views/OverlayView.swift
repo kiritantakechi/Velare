@@ -16,8 +16,9 @@ struct OverlayView: View {
     }
 
     var body: some View {
+        // 缓解修复
         if viewModel.texture != nil {
-            MetalView(gpuPool: viewModel.gpuPool, texture: viewModel.texture)
+            MetalView(gpuPool: viewModel.gpuPool, texture: Binding(get: { viewModel.texture }, set: { _ in }))
                 .ignoresSafeArea()
                 .background(WindowAccessor(callback: viewModel.setWindow))
         }
@@ -27,9 +28,8 @@ struct OverlayView: View {
                 .ignoresSafeArea()
                 .background(WindowAccessor(callback: viewModel.setWindow))
         }
-        
-        
-//        MetalView(gpuPool: viewModel.gpuPool, texture: viewModel.texture)
+
+//        MetalView(gpuPool: viewModel.gpuPool, texture: Binding(get: { viewModel.texture }, set: { _ in }))
 //            .ignoresSafeArea()
 //            .background(WindowAccessor(callback: viewModel.setWindow))
     }
