@@ -66,7 +66,7 @@ final class WindowDiscoveryService {
             height: frame.height
         )
 
-        print("🗺️ [WDS] 转换后 AppKit Frame: \(convertedFrame)")
+        // print("🗺️ [WDS] 转换后 AppKit Frame: \(convertedFrame)")
 
         return convertedFrame
     }

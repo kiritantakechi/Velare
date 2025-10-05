@@ -11,10 +11,9 @@ import SwiftUI
 
 final class GPUPool {
     private(set) var device: any MTLDevice
-    
+
     private var contexts: [MetalContext] = []
-    private var nextIndex = 0
-    private let lock = NSLock()
+    private var contextIndex: RingIndex
 
     init(contextCount: Int = 4) {
         guard let device = MTLCreateSystemDefaultDevice() else {
@@ -22,16 +21,14 @@ final class GPUPool {
         }
 
         self.device = consume device
-
+        self.contextIndex = RingIndex(count: contextCount)
         self.contexts = (0 ..< contextCount).map { _ in MetalContext(device: self.device) }
     }
 
     func acquireContext() -> MetalContext {
-        lock.lock()
-        defer { lock.unlock() }
-        let ctx = contexts[nextIndex]
-        nextIndex = (nextIndex + 1) % contexts.count
-        return ctx
+        let idx = contextIndex.next()
+
+        return contexts[idx]
     }
 
     func flushAllCaches() {

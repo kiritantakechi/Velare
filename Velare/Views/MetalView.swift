@@ -47,40 +47,39 @@ struct MetalView: NSViewRepresentable {
         let context: MetalContext
         private let commandQueue: any MTLCommandQueue
         private let pipeline: MetalPipeline
+        private let quadVertexBuffer: any MTLBuffer
 
-        private var renderQueue: [(any MTLTexture)?] = Array(repeating: nil, count: 16)
-        private var head = 0
-        private var tail = 0
-        private let queueLock = NSLock()
+        private var renderQueue = InlineMPSCQueue<24, any MTLTexture>()
 
         init(_ parent: MetalView, gpuPool: GPUPool) {
             self.context = gpuPool.acquireContext()
             self.commandQueue = context.commandQueue
             self.pipeline = MetalPipeline(device: gpuPool.device)
+
+            let quadVertices: [Float] = [
+                -1, -1, 0, 1,
+                1, -1, 1, 1,
+                -1, 1, 0, 0,
+                1, 1, 1, 0
+            ]
+            self.quadVertexBuffer = unsafe gpuPool.device.makeBuffer(
+                bytes: quadVertices,
+                length: MemoryLayout<Float>.size * quadVertices.count,
+                options: [.storageModeShared]
+            )!
         }
 
         func enqueueTexture(_ texture: (any MTLTexture)?) {
             guard let texture else { return }
 
-            queueLock.lock()
-            renderQueue[tail] = texture
-            tail = (tail + 1) % renderQueue.count
-            if tail == head { head = (head + 1) % renderQueue.count } // 队满覆盖最旧帧
-            queueLock.unlock()
+            renderQueue.enqueue(texture)
         }
 
         func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
 
         func draw(in view: MTKView) {
             // 弹出最新纹理
-            queueLock.lock()
-            guard head != tail, let textureToDraw = renderQueue[head] else {
-                queueLock.unlock()
-                return
-            }
-            renderQueue[head] = nil
-            head = (head + 1) % renderQueue.count
-            queueLock.unlock()
+            guard let textureToDraw = renderQueue.dequeue() else { return }
 
             guard let drawable = view.currentDrawable,
                   let descriptor = view.currentRenderPassDescriptor
@@ -89,20 +88,13 @@ struct MetalView: NSViewRepresentable {
             let commandBuffer = commandQueue.makeCommandBuffer()!
 
             let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: descriptor)!
+
             // 设置 pipeline
             encoder.setRenderPipelineState(pipeline.pipeline)
             // 设置纹理
             encoder.setFragmentTexture(textureToDraw, index: 0)
-
-            // 顶点 buffer，四个顶点全屏 quad
-            let quadVertices: [Float] = [
-                -1, -1, 0, 1,
-                1, -1, 1, 1,
-                -1, 1, 0, 0,
-                1, 1, 1, 0
-            ]
-
-            unsafe encoder.setVertexBytes(quadVertices, length: MemoryLayout<Float>.size * quadVertices.count, index: 0)
+            // 设置顶点
+            encoder.setVertexBuffer(quadVertexBuffer, offset: 0, index: 0)
 
             encoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
             encoder.endEncoding()

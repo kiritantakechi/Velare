@@ -13,13 +13,14 @@ final class MetalContext {
     let commandQueue: any MTLCommandQueue
     let textureCache: CVMetalTextureCache
 
-    private var texturePool: [CVMetalTexture?] = [nil, nil, nil]
-    private var poolIndex = 0
+    private var texturePool: InlineArray<2, CVMetalTexture?> = InlineArray(repeating: nil)
+    private var poolIndex: RingIndex
 
     init(device: any MTLDevice) {
         guard let queue = device.makeCommandQueue() else {
             fatalError("无法创建 CommandQueue")
         }
+        
         self.commandQueue = queue
 
         var cache: CVMetalTextureCache?
@@ -30,11 +31,14 @@ final class MetalContext {
             nil,
             &cache
         )
+        
         guard result == kCVReturnSuccess, let cache else {
             fatalError("无法创建 CVMetalTextureCache")
         }
 
         self.textureCache = consume cache
+        
+        self.poolIndex = RingIndex(count: self.texturePool.count)
     }
 
     func makeTexture(from pixelBuffer: CVPixelBuffer,
@@ -63,8 +67,8 @@ final class MetalContext {
         else { return nil }
 
         // triple buffer 复用
-        self.poolIndex = (self.poolIndex + 1) % self.texturePool.count
-        self.texturePool[self.poolIndex] = cvTexture
+        let idx = poolIndex.next()
+        self.texturePool[idx] = cvTexture
 
         return texture
     }

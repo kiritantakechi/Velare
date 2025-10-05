@@ -9,6 +9,14 @@
 /* Begin PBXBuildFile section */
 		39DDEB792E9034AC00D92EDD /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 39DDEB782E9034AC00D92EDD /* AsyncAlgorithms */; };
 		39DDEB7E2E91ACA800D92EDD /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 39DDEB7D2E91ACA800D92EDD /* Algorithms */; };
+		39DDECD22E92583700D92EDD /* BasicContainers in Frameworks */ = {isa = PBXBuildFile; productRef = 39DDECD12E92583700D92EDD /* BasicContainers */; };
+		39DDECD42E92583700D92EDD /* BitCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 39DDECD32E92583700D92EDD /* BitCollections */; };
+		39DDECD62E92583700D92EDD /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 39DDECD52E92583700D92EDD /* Collections */; };
+		39DDECD82E92583700D92EDD /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 39DDECD72E92583700D92EDD /* DequeModule */; };
+		39DDECDA2E92583700D92EDD /* HashTreeCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 39DDECD92E92583700D92EDD /* HashTreeCollections */; };
+		39DDECDC2E92583700D92EDD /* HeapModule in Frameworks */ = {isa = PBXBuildFile; productRef = 39DDECDB2E92583700D92EDD /* HeapModule */; };
+		39DDECDE2E92583700D92EDD /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 39DDECDD2E92583700D92EDD /* OrderedCollections */; };
+		39DDECE02E92583700D92EDD /* TrailingElementsModule in Frameworks */ = {isa = PBXBuildFile; productRef = 39DDECDF2E92583700D92EDD /* TrailingElementsModule */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,8 +65,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39DDECD42E92583700D92EDD /* BitCollections in Frameworks */,
+				39DDECD22E92583700D92EDD /* BasicContainers in Frameworks */,
+				39DDECD62E92583700D92EDD /* Collections in Frameworks */,
+				39DDECDA2E92583700D92EDD /* HashTreeCollections in Frameworks */,
 				39DDEB7E2E91ACA800D92EDD /* Algorithms in Frameworks */,
+				39DDECE02E92583700D92EDD /* TrailingElementsModule in Frameworks */,
+				39DDECDE2E92583700D92EDD /* OrderedCollections in Frameworks */,
 				39DDEB792E9034AC00D92EDD /* AsyncAlgorithms in Frameworks */,
+				39DDECDC2E92583700D92EDD /* HeapModule in Frameworks */,
+				39DDECD82E92583700D92EDD /* DequeModule in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,6 +145,14 @@
 			packageProductDependencies = (
 				39DDEB782E9034AC00D92EDD /* AsyncAlgorithms */,
 				39DDEB7D2E91ACA800D92EDD /* Algorithms */,
+				39DDECD12E92583700D92EDD /* BasicContainers */,
+				39DDECD32E92583700D92EDD /* BitCollections */,
+				39DDECD52E92583700D92EDD /* Collections */,
+				39DDECD72E92583700D92EDD /* DequeModule */,
+				39DDECD92E92583700D92EDD /* HashTreeCollections */,
+				39DDECDB2E92583700D92EDD /* HeapModule */,
+				39DDECDD2E92583700D92EDD /* OrderedCollections */,
+				39DDECDF2E92583700D92EDD /* TrailingElementsModule */,
 			);
 			productName = Velare;
 			productReference = 397808962E883BF4007F98C0 /* Velare.app */;
@@ -222,6 +246,7 @@
 			packageReferences = (
 				3978096C2E8AA03F007F98C0 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
 				39DDEB772E9034AC00D92EDD /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
+				39DDECD02E92583700D92EDD /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 397808972E883BF4007F98C0 /* Products */;
@@ -658,6 +683,14 @@
 				minimumVersion = 1.0.4;
 			};
 		};
+		39DDECD02E92583700D92EDD /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -670,6 +703,46 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3978096C2E8AA03F007F98C0 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
 			productName = Algorithms;
+		};
+		39DDECD12E92583700D92EDD /* BasicContainers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39DDECD02E92583700D92EDD /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = BasicContainers;
+		};
+		39DDECD32E92583700D92EDD /* BitCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39DDECD02E92583700D92EDD /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = BitCollections;
+		};
+		39DDECD52E92583700D92EDD /* Collections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39DDECD02E92583700D92EDD /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
+		};
+		39DDECD72E92583700D92EDD /* DequeModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39DDECD02E92583700D92EDD /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = DequeModule;
+		};
+		39DDECD92E92583700D92EDD /* HashTreeCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39DDECD02E92583700D92EDD /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = HashTreeCollections;
+		};
+		39DDECDB2E92583700D92EDD /* HeapModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39DDECD02E92583700D92EDD /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = HeapModule;
+		};
+		39DDECDD2E92583700D92EDD /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39DDECD02E92583700D92EDD /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
+		};
+		39DDECDF2E92583700D92EDD /* TrailingElementsModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39DDECD02E92583700D92EDD /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = TrailingElementsModule;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
