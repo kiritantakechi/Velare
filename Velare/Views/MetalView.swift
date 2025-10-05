@@ -44,12 +44,12 @@ struct MetalView: NSViewRepresentable {
     }
 
     class Coordinator: NSObject, MTKViewDelegate {
-        let context: MetalContext
         private let commandQueue: any MTLCommandQueue
         private let pipeline: MetalPipeline
         private let quadVertexBuffer: any MTLBuffer
-
         private var renderQueue = InlineMPSCQueue<24, any MTLTexture>()
+        
+        let context: MetalContext
 
         init(_ parent: MetalView, gpuPool: GPUPool) {
             self.context = gpuPool.acquireContext()
