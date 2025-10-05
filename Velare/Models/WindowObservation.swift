@@ -7,12 +7,20 @@
 
 import SwiftUI
 
-struct WindowObservation: Sendable {
+struct WindowObservation: Hashable, Sendable {
     let id = UUID()
     let handler: (WindowEvent) -> Void
 
     init(_ handler: @escaping (WindowEvent) -> Void) {
         self.handler = handler
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: borrowing WindowObservation, rhs: borrowing WindowObservation) -> Bool {
+        return lhs.id == rhs.id
     }
 }
 

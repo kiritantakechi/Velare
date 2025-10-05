@@ -63,10 +63,9 @@ final class CaptureService: NSObject {
                         guard let frame = VideoFrame(from: sampleBuffer, using: ctx) else { continue }
 
                         // 3. 异步处理
-                        let processedTexture = try await self.processingService.process(frame)
+                        let processedFrame = try await self.processingService.process(frame)
 
-                        // 7. 更新 OverlayService
-                        self.overlayService.update(texture: processedTexture.texture)
+                        self.overlayService.update(videoFrame: processedFrame)
                     }
                 }
             } catch is CancellationError {

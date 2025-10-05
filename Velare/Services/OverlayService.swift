@@ -17,7 +17,7 @@ final class OverlayService {
     private var targetFrame: CGRect = .zero
     private var trackingTask: Task<Void, Never>?
     
-    private(set) var texture: (any MTLTexture)?
+    private(set) var videoFrame: VideoFrame?
     
     private(set) var isTracking: Bool = false
     private(set) var isWindowConfigured: Bool = false
@@ -27,9 +27,9 @@ final class OverlayService {
         self.windowObserverService = windowObserverService
     }
     
-    func update(texture: consuming any MTLTexture) {
-        self.texture = consume texture
-        print("🔄 [OverlayService] 纹理已更新")
+    func update(videoFrame: consuming VideoFrame) {
+        print("🔄 [OverlayService] 纹理已更新 \(videoFrame.texture)")
+        self.videoFrame = consume videoFrame
     }
     
     func setWindow(_ window: consuming NSWindow) {
@@ -84,7 +84,7 @@ final class OverlayService {
         
         trackingTask?.cancel()
         trackingTask = nil
-        texture = nil // 清理纹理
+        videoFrame = nil // 清理纹理
     }
     
     private func configureWindow() {

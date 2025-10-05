@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MetalView: NSViewRepresentable {
     let gpuPool: GPUPool
-    @Binding var texture: (any MTLTexture)?
+    @Binding var videoFrame: VideoFrame?
 
     func makeCoordinator() -> Coordinator {
         Coordinator(self, gpuPool: gpuPool)
@@ -37,7 +37,7 @@ struct MetalView: NSViewRepresentable {
     }
 
     func updateNSView(_ nsView: MTKView, context: Context) {
-        context.coordinator.enqueueTexture(texture)
+        context.coordinator.enqueueTexture(videoFrame?.texture)
 
         // 手动绘制
 //         nsView.setNeedsDisplay(nsView.bounds)

@@ -8,7 +8,7 @@
 import CoreMedia
 import Metal
 
-struct VideoFrame: Sendable, ~Copyable {
+struct VideoFrame: Hashable, Sendable {
     private var textureIdentifier: String
 
     var texture: any MTLTexture

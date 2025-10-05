@@ -29,7 +29,7 @@ struct OverlayView: View {
 //                .background(WindowAccessor(callback: viewModel.setWindow))
 //        }
 
-        MetalView(gpuPool: viewModel.gpuPool, texture: Binding(get: { viewModel.texture }, set: { _ in }))
+        MetalView(gpuPool: viewModel.gpuPool, videoFrame: Binding(get: { viewModel.videoFrame }, set: { _ in }))
             .ignoresSafeArea()
             .background(WindowAccessor(callback: viewModel.setWindow))
     }

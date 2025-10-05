@@ -14,7 +14,7 @@ final class OverlayViewModel {
     private unowned let overlayService: OverlayService
     unowned let gpuPool: GPUPool
 
-    var texture: (any MTLTexture)? { overlayService.texture }
+    var videoFrame: VideoFrame? { overlayService.videoFrame }
 
     init(coordinator: consuming AppCoordinator) {
         self.gpuPool = coordinator.gpuPool
