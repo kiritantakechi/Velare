@@ -9,54 +9,50 @@ import CoreMedia
 import Metal
 
 struct VideoFrame: Sendable, ~Copyable {
-    var texture: any MTLTexture // 直接使用 Metal 纹理，效率最高
+    var texture: any MTLTexture
     let timestamp: CMTime
 
-    init?(from sampleBuffer: CMSampleBuffer, textureCache: CVMetalTextureCache) {
-        // 1. 从 sampleBuffer 中获取时间戳
+    init(texture: consuming any MTLTexture, timestamp: consuming CMTime) {
+        self.texture = consume texture
+        self.timestamp = consume timestamp
+    }
+
+    init?(from sampleBuffer: borrowing CMSampleBuffer, using context: borrowing MetalContext) {
         self.timestamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
 
-        // 2. 从 sampleBuffer 中获取图像数据 (CVPixelBuffer)
-        guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
-            print("错误：无法从 CMSampleBuffer 中获取 CVImageBuffer")
+        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+            print("错误：无法获取 CVPixelBuffer")
             return nil
         }
 
-        // 3. 获取视频帧的宽高
-        let width = CVPixelBufferGetWidth(imageBuffer)
-        let height = CVPixelBufferGetHeight(imageBuffer)
-
-        // 4. 使用 textureCache 从 imageBuffer 创建一个 Metal 纹理 (零拷贝)
-        var cvMetalTexture: CVMetalTexture?
-        let status = unsafe CVMetalTextureCacheCreateTextureFromImage(
-            kCFAllocatorDefault,
-            textureCache,
-            imageBuffer,
-            nil,
-            .bgra8Unorm, // 假设 SCStream 输出的是 BGRA 格式
-            width,
-            height,
-            0,
-            &cvMetalTexture
-        )
-
-        // 5. 检查创建是否成功，并从中提取出 MTLTexture
-        if status == kCVReturnSuccess, let metalTexture = cvMetalTexture {
-            // CVMetalTextureGetTexture 会返回一个可选的 MTLTexture，我们解包它
-            guard let originalTexture = CVMetalTextureGetTexture(metalTexture) else {
-                print("错误：无法从 CVMetalTexture 中获取 MTLTexture")
-                return nil
-            }
-            // Create a new texture view to ensure a unique texture object for this frame.
-            // This is crucial for Sendable conformance and preventing data races.
-            guard let newTexture = originalTexture.makeTextureView(pixelFormat: originalTexture.pixelFormat) else {
-                print("错误：无法从原始纹理创建新的 TextureView")
-                return nil
-            }
-            self.texture = newTexture
-        } else {
-            print("错误：无法从 CVImageBuffer 创建 Metal 纹理，状态码: \(status)")
+        guard let texture = context.makeTexture(from: pixelBuffer, pixelFormat: .bgra8Unorm) else {
+            print("错误：无法生成 Metal 纹理")
             return nil
+        }
+
+        self.texture = consume texture
+    }
+
+    static func createAsync(from sampleBuffer: borrowing CMSampleBuffer,
+                            using context: borrowing MetalContext,
+                            completion: @escaping (consuming VideoFrame?) -> Void)
+    {
+        let timestamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+
+        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+            completion(nil)
+            return
+        }
+
+        context.makeTextureAsync(from: pixelBuffer, pixelFormat: .bgra8Unorm) { texture in
+            guard let texture else {
+                completion(nil)
+                return
+            }
+
+            let frame = VideoFrame(texture: texture, timestamp: timestamp)
+
+            completion(consume frame)
         }
     }
 }

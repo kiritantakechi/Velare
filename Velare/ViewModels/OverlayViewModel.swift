@@ -12,12 +12,12 @@ final class OverlayViewModel {
     private unowned let coordinator: AppCoordinator
 
     private unowned let overlayService: OverlayService
-    unowned let cacheService: CacheService
+    unowned let gpuContextPool: GPUContextPool
 
     var texture: (any MTLTexture)? { overlayService.texture }
 
     init(coordinator: consuming AppCoordinator) {
-        self.cacheService = coordinator.cacheService
+        self.gpuContextPool = coordinator.gpuContextPool
         self.overlayService = coordinator.overlayService
 
         self.coordinator = consume coordinator

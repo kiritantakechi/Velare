@@ -9,66 +9,84 @@ import MetalKit
 import SwiftUI
 
 struct MetalView: NSViewRepresentable {
-    let cacheService: CacheService
+    let gpuContextPool: GPUContextPool
     let texture: (any MTLTexture)?
-    
+
     func makeCoordinator() -> Coordinator {
-        Coordinator(self)
+        Coordinator(self, gpuContextPool: gpuContextPool)
     }
-    
+
     func makeNSView(context: Context) -> MTKView {
         let mtkView = MTKView()
         mtkView.delegate = context.coordinator
-            
-        // ✅ 使用来自 CacheService 的 device
-        mtkView.device = cacheService.device
-            
-        mtkView.framebufferOnly = false
-        mtkView.isPaused = true
-        mtkView.enableSetNeedsDisplay = true
+        mtkView.device = gpuContextPool.device
+
         mtkView.clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 0)
-            
+        mtkView.framebufferOnly = false
+        
+        // 自动绘制
+        mtkView.isPaused = false
+        mtkView.enableSetNeedsDisplay = false
+        mtkView.preferredFramesPerSecond = 144
+        
+        // 手动绘制
+//         mtkView.isPaused = true
+//         mtkView.enableSetNeedsDisplay = true
+
         return mtkView
     }
 
     func updateNSView(_ nsView: MTKView, context: Context) {
-        if context.coordinator.texture !== texture {
-            context.coordinator.texture = texture
-            nsView.setNeedsDisplay(nsView.bounds)
-        }
+        context.coordinator.enqueueTexture(texture)
+        
+        // 手动绘制
+//         nsView.setNeedsDisplay(nsView.bounds)
     }
-    
+
     class Coordinator: NSObject, MTKViewDelegate {
-        var parent: MetalView // 用于访问 cacheService
-        var texture: (any MTLTexture)?
-            
-        // ✅ Command Queue 也从 cacheService 的 device 创建
+        let context: MetalContext
         private let commandQueue: any MTLCommandQueue
 
-        init(_ parent: MetalView) {
-            self.parent = parent
-            // ✅ 在初始化时创建一次 Command Queue
-            guard let commandQueue = parent.cacheService.device.makeCommandQueue() else {
-                fatalError("无法创建 Metal Command Queue")
-            }
-            self.commandQueue = commandQueue
+        private var renderQueue: [(any MTLTexture)?] = Array(repeating: nil, count: 16)
+        private var head = 0
+        private var tail = 0
+        private let queueLock = NSLock()
+
+        init(_ parent: MetalView, gpuContextPool: GPUContextPool) {
+            self.context = gpuContextPool.acquireContext()
+            self.commandQueue = context.commandQueue
+        }
+
+        func enqueueTexture(_ texture: (any MTLTexture)?) {
+            guard let texture else { return }
+            
+            queueLock.lock()
+            renderQueue[tail] = texture
+            tail = (tail + 1) % renderQueue.count
+            if tail == head { head = (head + 1) % renderQueue.count } // 队满覆盖最旧帧
+            queueLock.unlock()
         }
 
         func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
 
         func draw(in view: MTKView) {
-            guard let texture = texture,
-                  let drawable = view.currentDrawable,
-                  // ✅ 使用 coordinator持有的 commandQueue
-                  let commandBuffer = commandQueue.makeCommandBuffer(),
-                  let blitEncoder = commandBuffer.makeBlitCommandEncoder()
-            else {
+            queueLock.lock()
+            guard head != tail, let textureToDraw = renderQueue[head] else {
+                queueLock.unlock()
                 return
             }
-                
-            blitEncoder.copy(from: texture, to: drawable.texture)
+            renderQueue[head] = nil
+            head = (head + 1) % renderQueue.count
+            queueLock.unlock()
+
+            guard let drawable = view.currentDrawable,
+                  let commandBuffer = commandQueue.makeCommandBuffer(),
+                  let blitEncoder = commandBuffer.makeBlitCommandEncoder()
+            else { return }
+
+            blitEncoder.copy(from: textureToDraw, to: drawable.texture)
             blitEncoder.endEncoding()
-                
+
             commandBuffer.present(drawable)
             commandBuffer.commit()
         }

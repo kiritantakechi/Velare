@@ -38,7 +38,8 @@ enum AppRoute: String, CaseIterable, Hashable, Identifiable, Sendable {
 final class AppCoordinator {
     var selectedRoute: AppRoute?
 
-    let cacheService: CacheService
+    let gpuContextPool: GPUContextPool
+
     let captureService: CaptureService
     let overlayService: OverlayService
     let permissionService: PermissionService
@@ -52,14 +53,15 @@ final class AppCoordinator {
     init() {
         settingService = SettingService()
 
-        cacheService = CacheService()
+        gpuContextPool = GPUContextPool(contextCount: 4)
+        
         permissionService = PermissionService()
         systemMonitorService = SystemMonitorService()
         windowDiscoveryService = WindowDiscoveryService()
 
         overlayService = OverlayService(windowDiscoveryService: windowDiscoveryService)
         processingService = ProcessingService(SettingService: settingService)
-        captureService = CaptureService(cacheService: cacheService, overlayService: overlayService, processingService: processingService, settingService: settingService, windowDiscoveryService: windowDiscoveryService)
+        captureService = CaptureService(gpuContextPool: gpuContextPool, overlayService: overlayService, processingService: processingService, settingService: settingService, windowDiscoveryService: windowDiscoveryService)
     }
 
     func start() async {
@@ -71,7 +73,7 @@ final class AppCoordinator {
     }
 
     private func checkPermissions() async {
-        if permissionService.isAccessibilityPermissionGranted && permissionService.isScreenCapturePermissionGranted {
+        if permissionService.isAccessibilityPermissionGranted, permissionService.isScreenCapturePermissionGranted {
             permissionsGranted()
         }
         else {
