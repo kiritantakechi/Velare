@@ -54,7 +54,7 @@ struct MetalView: NSViewRepresentable {
         init(_ parent: MetalView, gpuPool: GPUPool) {
             self.context = gpuPool.acquireContext()
             self.commandQueue = context.commandQueue
-            self.pipeline = MetalPipeline(device: gpuPool.device)
+            self.pipeline = MetalPipeline(device: context.device)
 
             let quadVertices: [Float] = [
                 -1, -1, 0, 1,
@@ -62,7 +62,7 @@ struct MetalView: NSViewRepresentable {
                 -1, 1, 0, 0,
                 1, 1, 1, 0
             ]
-            self.quadVertexBuffer = unsafe gpuPool.device.makeBuffer(
+            self.quadVertexBuffer = unsafe context.device.makeBuffer(
                 bytes: quadVertices,
                 length: MemoryLayout<Float>.size * quadVertices.count,
                 options: [.storageModeShared]

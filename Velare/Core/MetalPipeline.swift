@@ -9,8 +9,7 @@ import Metal
 import SwiftUI
 
 final class MetalPipeline {
-    private let device: any MTLDevice
-
+    private(set) var device: any MTLDevice
     private(set) var pipeline: (any MTLRenderPipelineState)!
 
     init(device: any MTLDevice) {

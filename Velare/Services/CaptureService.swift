@@ -38,7 +38,7 @@ final class CaptureService: NSObject {
     }
 
     func startCapture(for window: SCWindow) {
-        guard !isCapturing else {
+        guard !isCapturing, capturePipelineTask == nil else {
             print("Capture is already in progress.")
             return
         }

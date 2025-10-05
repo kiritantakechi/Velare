@@ -12,11 +12,14 @@ import SwiftUI
 final class MetalContext {
     let commandQueue: any MTLCommandQueue
     let textureCache: CVMetalTextureCache
+    
+    private(set) var device: any MTLDevice
 
     private var texturePool: InlineArray<2, CVMetalTexture?> = InlineArray(repeating: nil)
     private var poolIndex: RingIndex
 
     init(device: any MTLDevice) {
+        
         guard let queue = device.makeCommandQueue() else {
             fatalError("无法创建 CommandQueue")
         }
@@ -39,6 +42,8 @@ final class MetalContext {
         self.textureCache = consume cache
         
         self.poolIndex = RingIndex(count: self.texturePool.count)
+        
+        self.device = device
     }
 
     func makeTexture(from pixelBuffer: CVPixelBuffer,

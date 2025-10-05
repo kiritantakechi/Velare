@@ -47,6 +47,7 @@ final class AppCoordinator {
     let settingService: SettingService
     let systemMonitorService: SystemMonitorService
     let windowDiscoveryService: WindowDiscoveryService
+    let windowObserverService: WindowObserverService
 
     private(set) var isLoading: Bool = false
 
@@ -54,10 +55,11 @@ final class AppCoordinator {
         settingService = SettingService()
 
         gpuPool = GPUPool(contextCount: 4)
-        
+
         permissionService = PermissionService()
         systemMonitorService = SystemMonitorService()
         windowDiscoveryService = WindowDiscoveryService()
+        windowObserverService = WindowObserverService()
 
         overlayService = OverlayService(windowDiscoveryService: windowDiscoveryService)
         processingService = ProcessingService(SettingService: settingService)
