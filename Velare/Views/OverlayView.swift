@@ -17,7 +17,7 @@ struct OverlayView: View {
 
     var body: some View {
         if viewModel.texture != nil {
-            MetalView(gpuContextPool: viewModel.gpuContextPool, texture: viewModel.texture)
+            MetalView(gpuPool: viewModel.gpuPool, texture: viewModel.texture)
                 .ignoresSafeArea()
                 .background(WindowAccessor(callback: viewModel.setWindow))
         }

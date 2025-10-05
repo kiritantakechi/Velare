@@ -10,7 +10,7 @@ internal import ScreenCaptureKit
 
 @Observable
 final class CaptureService: NSObject {
-    private let gpuContextPool: GPUContextPool
+    private let gpuPool: GPUPool
 
     private let overlayService: OverlayService
     private let processingService: ProcessingService
@@ -26,8 +26,8 @@ final class CaptureService: NSObject {
 
     private(set) var isCapturing: Bool = false
 
-    init(gpuContextPool: GPUContextPool, overlayService: OverlayService, processingService: ProcessingService, settingService: SettingService, windowDiscoveryService: WindowDiscoveryService) {
-        self.gpuContextPool = gpuContextPool
+    init(gpuPool: GPUPool, overlayService: OverlayService, processingService: ProcessingService, settingService: SettingService, windowDiscoveryService: WindowDiscoveryService) {
+        self.gpuPool = gpuPool
 
         self.overlayService = overlayService
         self.processingService = processingService
@@ -57,7 +57,7 @@ final class CaptureService: NSObject {
                     for await sampleBuffer in stream {
                         try Task.checkCancellation()
 
-                        let ctx = self.gpuContextPool.acquireContext()
+                        let ctx = self.gpuPool.acquireContext()
 
                         // 2. 创建 VideoFrame
                         guard let frame = VideoFrame(from: sampleBuffer, using: ctx) else { continue }

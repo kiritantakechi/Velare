@@ -1,5 +1,5 @@
 //
-//  GPUContextPool.swift
+//  GPUPool.swift
 //  Velare
 //
 //  Created by Kiritan on 2025/10/05.
@@ -9,8 +9,9 @@ import Foundation
 import Metal
 import SwiftUI
 
-final class GPUContextPool {
+final class GPUPool {
     private(set) var device: any MTLDevice
+    
     private var contexts: [MetalContext] = []
     private var nextIndex = 0
     private let lock = NSLock()

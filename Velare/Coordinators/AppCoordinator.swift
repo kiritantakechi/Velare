@@ -38,7 +38,7 @@ enum AppRoute: String, CaseIterable, Hashable, Identifiable, Sendable {
 final class AppCoordinator {
     var selectedRoute: AppRoute?
 
-    let gpuContextPool: GPUContextPool
+    let gpuPool: GPUPool
 
     let captureService: CaptureService
     let overlayService: OverlayService
@@ -53,7 +53,7 @@ final class AppCoordinator {
     init() {
         settingService = SettingService()
 
-        gpuContextPool = GPUContextPool(contextCount: 4)
+        gpuPool = GPUPool(contextCount: 4)
         
         permissionService = PermissionService()
         systemMonitorService = SystemMonitorService()
@@ -61,7 +61,7 @@ final class AppCoordinator {
 
         overlayService = OverlayService(windowDiscoveryService: windowDiscoveryService)
         processingService = ProcessingService(SettingService: settingService)
-        captureService = CaptureService(gpuContextPool: gpuContextPool, overlayService: overlayService, processingService: processingService, settingService: settingService, windowDiscoveryService: windowDiscoveryService)
+        captureService = CaptureService(gpuPool: gpuPool, overlayService: overlayService, processingService: processingService, settingService: settingService, windowDiscoveryService: windowDiscoveryService)
     }
 
     func start() async {
