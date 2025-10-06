@@ -48,7 +48,7 @@ struct MetalView: NSViewRepresentable {
         private let pipeline: MetalPipeline
         private let quadVertexBuffer: any MTLBuffer
         private var renderQueue = InlineMPSCQueue<24, any MTLTexture>()
-        
+
         let context: MetalContext
 
         init(_ parent: MetalView, gpuPool: GPUPool) {

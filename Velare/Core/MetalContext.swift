@@ -9,21 +9,22 @@ import CoreVideo
 import Metal
 import SwiftUI
 
-final class MetalContext {
+final class MetalContext: Sendable {
     let commandQueue: any MTLCommandQueue
     let textureCache: CVMetalTextureCache
-    
+
     private(set) var device: any MTLDevice
 
     private var texturePool: InlineArray<2, CVMetalTexture?> = InlineArray(repeating: nil)
     private var poolIndex: RingIndex
 
     init(device: any MTLDevice) {
-        
+        self.device = device
+
         guard let queue = device.makeCommandQueue() else {
             fatalError("无法创建 CommandQueue")
         }
-        
+
         self.commandQueue = queue
 
         var cache: CVMetalTextureCache?
@@ -34,7 +35,7 @@ final class MetalContext {
             nil,
             &cache
         )
-        
+
         guard result == kCVReturnSuccess, let cache else {
             fatalError("无法创建 CVMetalTextureCache")
         }
@@ -42,8 +43,6 @@ final class MetalContext {
         self.textureCache = consume cache
         
         self.poolIndex = RingIndex(count: self.texturePool.count)
-        
-        self.device = device
     }
 
     func makeTexture(from pixelBuffer: CVPixelBuffer,
@@ -72,22 +71,22 @@ final class MetalContext {
         else { return nil }
 
         // triple buffer 复用
-        let idx = poolIndex.next()
+        let idx = self.poolIndex.next()
         self.texturePool[idx] = cvTexture
 
         return texture
     }
 
-    func makeTextureAsync(from pixelBuffer: CVPixelBuffer,
-                          pixelFormat: MTLPixelFormat,
-                          planeIndex: Int = 0,
-                          completion: @escaping ((any MTLTexture)?) -> Void)
-    {
-        DispatchQueue.global(qos: .userInitiated).async {
-            let texture = self.makeTexture(from: pixelBuffer, pixelFormat: pixelFormat, planeIndex: planeIndex)
-            completion(texture)
-        }
-    }
+//    func makeTextureAsync(from pixelBuffer: CVPixelBuffer,
+//                          pixelFormat: MTLPixelFormat,
+//                          planeIndex: Int = 0,
+//                          completion: @escaping @Sendable ((any MTLTexture)?) -> Void)
+//    {
+//        DispatchQueue.global(qos: .userInitiated).async {
+//            let texture = self.makeTexture(from: pixelBuffer, pixelFormat: pixelFormat, planeIndex: planeIndex)
+//            completion(texture)
+//        }
+//    }
 
     func flushCache() {
         CVMetalTextureCacheFlush(self.textureCache, 0)

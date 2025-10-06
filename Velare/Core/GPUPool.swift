@@ -9,7 +9,7 @@ import Foundation
 import Metal
 import SwiftUI
 
-final class GPUPool {
+final class GPUPool: Sendable {
     private(set) var device: any MTLDevice
 
     private var contexts: [MetalContext] = []

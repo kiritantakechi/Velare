@@ -39,28 +39,28 @@ struct VideoFrame: Hashable, Sendable {
         self.texture = consume texture
     }
 
-    static func createAsync(from sampleBuffer: borrowing CMSampleBuffer,
-                            using context: borrowing MetalContext,
-                            completion: @escaping (consuming VideoFrame?) -> Void)
-    {
-        let timestamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-
-        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
-            completion(nil)
-            return
-        }
-
-        context.makeTextureAsync(from: pixelBuffer, pixelFormat: .bgra8Unorm) { texture in
-            guard let texture else {
-                completion(nil)
-                return
-            }
-
-            let frame = VideoFrame(texture: texture, timestamp: timestamp)
-
-            completion(consume frame)
-        }
-    }
+//    static func createAsync(from sampleBuffer: borrowing CMSampleBuffer,
+//                            using context: borrowing MetalContext,
+//                            completion: @escaping @Sendable (consuming VideoFrame?) -> Void)
+//    {
+//        let timestamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+//
+//        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+//            completion(nil)
+//            return
+//        }
+//
+//        context.makeTextureAsync(from: pixelBuffer, pixelFormat: .bgra8Unorm) { texture in
+//            guard let texture else {
+//                completion(nil)
+//                return
+//            }
+//
+//            let frame = VideoFrame(texture: texture, timestamp: timestamp)
+//
+//            completion(consume frame)
+//        }
+//    }
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(textureIdentifier) // 使用标识符而不是直接用 texture

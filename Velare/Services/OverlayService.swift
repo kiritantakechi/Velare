@@ -28,7 +28,7 @@ final class OverlayService {
     }
     
     func update(videoFrame: consuming VideoFrame) {
-        print("🔄 [OverlayService] 纹理已更新 \(videoFrame.texture)")
+        // print("🔄 [OverlayService] 纹理已更新 \(videoFrame.texture)")
         self.videoFrame = consume videoFrame
     }
     

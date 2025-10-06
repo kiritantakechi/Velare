@@ -7,7 +7,7 @@
 
 import Synchronization
 
-struct RingIndex: ~Copyable {
+struct RingIndex: Sendable, ~Copyable {
     private let count: Int
     private let index = Atomic<Int>(0)
     

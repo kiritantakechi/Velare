@@ -8,7 +8,7 @@
 import Synchronization
 
 // 无锁 MPSC 队列，固定容量循环缓冲
-struct InlineMPSCQueue<let count: Int, Element>: ~Copyable {
+struct InlineMPSCQueue<let count: Int, Element>: Sendable, ~Copyable {
     private var buffer: InlineArray<count, Element?>
     
     private let head = Atomic<Int>(0) // 消费者索引
@@ -50,5 +50,16 @@ struct InlineMPSCQueue<let count: Int, Element>: ~Copyable {
         buffer[currentHead] = nil
         head.store((currentHead + 1) % count, ordering: .releasing)
         return value
+    }
+    
+    mutating func clear() {
+        // 原子重置索引
+        head.store(0, ordering: .releasing)
+        tail.store(0, ordering: .releasing)
+            
+        // 清空所有槽位
+        for i in 0 ..< count {
+            buffer[i] = nil
+        }
     }
 }
